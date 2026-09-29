@@ -59,7 +59,7 @@ The major project deliverables are:
 
 ## 5. Repository Structure
 
-```text
+
 Web-Based-ML-Model-Evaluator/
 │
 ├── README.md
