@@ -97,9 +97,9 @@ The Test Plan defines the testing approach, test objectives, test scenarios, tes
 | Name | Role |
 |------|------|
 | Shreyank S | Project Development / Documentation |
-|  Prajwal   | [Role] |
-|  Sujal.    | [Role] |
-|  Skanda    | [Role] |
+|  Prajwal   | Project Development|
+|  Sujal.    | Project Development |
+|  Skanda    | Project Development |
 
 > Replace the placeholders above with the actual team member names and responsibilities.
 
