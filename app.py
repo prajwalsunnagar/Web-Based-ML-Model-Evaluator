@@ -1,164 +1,235 @@
-```python
+
 import streamlit as st
 import pandas as pd
+import numpy as np
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    mean_absolute_error,
+    mean_squared_error,
+    r2_score,
+)
 
 st.set_page_config(
     page_title="ML Model Evaluator",
     page_icon="📊",
-    layout="wide"
+    layout="wide",
 )
 
 st.title("Web-Based ML Model Evaluator")
-st.write("Upload a CSV dataset to validate its structure and configure evaluation.")
+st.write("Upload a CSV containing actual and predicted values.")
 
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 
 CLASSIFICATION_METRICS = [
-    "Accuracy",
-    "Precision",
-    "Recall",
-    "F1-score"
+    "Accuracy", "Precision", "Recall", "F1-score"
 ]
-
-REGRESSION_METRICS = [
-    "MAE",
-    "MSE",
-    "RMSE",
-    "R²"
-]
+REGRESSION_METRICS = ["MAE", "MSE", "RMSE", "R²"]
 
 uploaded_file = st.file_uploader(
-    "Upload your dataset",
-    type=["csv"]
+    "Upload evaluation CSV",
+    type=["csv"],
 )
 
 if uploaded_file is not None:
     if uploaded_file.size > MAX_FILE_SIZE:
         st.error("File is too large. Maximum allowed size is 10 MB.")
+        st.stop()
+
+    try:
+        df = pd.read_csv(uploaded_file)
+    except (pd.errors.ParserError, UnicodeDecodeError):
+        st.error("Invalid CSV format. Please upload a valid CSV.")
+        st.stop()
+    except Exception:
+        st.error("Unable to read this file.")
+        st.stop()
+
+    if df.empty or len(df.columns) < 2:
+        st.error("Upload a non-empty CSV with at least two columns.")
+        st.stop()
+
+    if df.columns.duplicated().any():
+        st.error("Duplicate column names found. Rename them and retry.")
+        st.stop()
+
+    blank_columns = [
+        str(c) for c in df.columns
+        if not str(c).strip() or str(c).startswith("Unnamed:")
+    ]
+    if blank_columns:
+        st.error(f"Blank or unnamed columns found: {blank_columns}")
+        st.stop()
+
+    st.success("CSV uploaded successfully!")
+
+    st.subheader("Dataset preview")
+    st.dataframe(df.head(10), use_container_width=True)
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Rows", len(df))
+    col2.metric("Columns", len(df.columns))
+    col3.metric("Missing values", int(df.isnull().sum().sum()))
+
+    st.subheader("Evaluation configuration")
+
+    task_type = st.selectbox(
+        "Evaluation task",
+        ["Classification", "Regression"],
+    )
+
+    actual_column = st.selectbox(
+        "Actual values column",
+        options=list(df.columns),
+        index=0,
+    )
+
+    predicted_column = st.selectbox(
+        "Predicted values column",
+        options=list(df.columns),
+        index=1,
+    )
+
+    available_metrics = (
+        CLASSIFICATION_METRICS
+        if task_type == "Classification"
+        else REGRESSION_METRICS
+    )
+
+    selected_metrics = st.multiselect(
+        "Select metrics",
+        options=available_metrics,
+        default=[available_metrics[0]],
+    )
+
+    if actual_column == predicted_column:
+        st.error("Actual and predicted columns must be different.")
+
+    elif not selected_metrics:
+        st.warning("Select at least one metric.")
 
     else:
-        try:
-            df = pd.read_csv(uploaded_file)
+        st.write(f"**Task:** {task_type}")
+        st.write(f"**Metrics:** {', '.join(selected_metrics)}")
 
-            if df.empty:
-                st.error("The uploaded CSV is empty.")
+        if st.button("Calculate evaluation metrics"):
+            actual = df[actual_column]
+            predicted = df[predicted_column]
 
-            elif len(df.columns) == 0:
-                st.error("The dataset has no columns.")
+            # Remove rows where either value is missing.
+            valid_rows = actual.notna() & predicted.notna()
+            actual = actual[valid_rows]
+            predicted = predicted[valid_rows]
+
+            if len(actual) == 0:
+                st.error("No valid rows remain after removing missing values.")
+
+            elif task_type == "Classification":
+                if actual.nunique() < 2:
+                    st.error(
+                        "Classification evaluation requires at least "
+                        "two distinct actual classes."
+                    )
+                else:
+                    try:
+                        results = {}
+
+                        if "Accuracy" in selected_metrics:
+                            results["Accuracy"] = accuracy_score(
+                                actual, predicted
+                            )
+
+                        if "Precision" in selected_metrics:
+                            results["Precision"] = precision_score(
+                                actual, predicted,
+                                average="weighted",
+                                zero_division=0,
+                            )
+
+                        if "Recall" in selected_metrics:
+                            results["Recall"] = recall_score(
+                                actual, predicted,
+                                average="weighted",
+                                zero_division=0,
+                            )
+
+                        if "F1-score" in selected_metrics:
+                            results["F1-score"] = f1_score(
+                                actual, predicted,
+                                average="weighted",
+                                zero_division=0,
+                            )
+
+                        st.subheader("Evaluation results")
+                        for metric, value in results.items():
+                            st.metric(metric, f"{value:.4f}")
+
+                    except Exception:
+                        st.error(
+                            "Classification evaluation failed. "
+                            "Check that actual and predicted values "
+                            "use compatible labels."
+                        )
 
             else:
-                st.success("CSV uploaded successfully!")
-
-                st.subheader("Dataset preview")
-                st.dataframe(df.head(10), use_container_width=True)
-
-                st.subheader("Dataset information")
-
-                col1, col2, col3 = st.columns(3)
-                col1.metric("Rows", len(df))
-                col2.metric("Columns", len(df.columns))
-                col3.metric(
-                    "Missing values",
-                    int(df.isnull().sum().sum())
-                )
-
-                st.subheader("Column validation")
-
-                blank_columns = [
-                    str(column)
-                    for column in df.columns
-                    if str(column).strip() == ""
-                    or str(column).startswith("Unnamed:")
-                ]
-
-                if blank_columns:
-                    st.warning(
-                        f"Check these blank or unnamed columns: "
-                        f"{blank_columns}"
+                try:
+                    actual_numeric = pd.to_numeric(
+                        actual, errors="raise"
+                    )
+                    predicted_numeric = pd.to_numeric(
+                        predicted, errors="raise"
                     )
 
-                duplicate_columns = df.columns[
-                    df.columns.duplicated()
-                ].tolist()
-
-                if duplicate_columns:
-                    st.error(
-                        f"Duplicate column names found: "
-                        f"{duplicate_columns}"
-                    )
-                else:
-                    st.success("Column names are unique.")
-
-                target_column = st.selectbox(
-                    "Select the target column",
-                    options=list(df.columns)
-                )
-
-                if target_column:
-                    missing_targets = int(
-                        df[target_column].isnull().sum()
-                    )
-
-                    st.write(f"Selected target: **{target_column}**")
-
-                    if missing_targets:
-                        st.warning(
-                            f"The target column contains "
-                            f"{missing_targets} missing values."
+                    if not (
+                        np.isfinite(actual_numeric).all()
+                        and np.isfinite(predicted_numeric).all()
+                    ):
+                        st.error(
+                            "Regression values must be finite numbers."
                         )
                     else:
-                        st.success(
-                            "The selected target column has no "
-                            "missing values."
-                        )
+                        results = {}
 
-                    if df[target_column].nunique(dropna=True) < 2:
-                        st.warning(
-                            "The target column has fewer than "
-                            "two distinct non-missing values."
-                        )
+                        if "MAE" in selected_metrics:
+                            results["MAE"] = mean_absolute_error(
+                                actual_numeric, predicted_numeric
+                            )
 
-                st.subheader("Evaluation configuration")
+                        if "MSE" in selected_metrics:
+                            results["MSE"] = mean_squared_error(
+                                actual_numeric, predicted_numeric
+                            )
 
-                task_type = st.selectbox(
-                    "Select the evaluation task",
-                    ["Classification", "Regression"]
-                )
+                        if "RMSE" in selected_metrics:
+                            results["RMSE"] = np.sqrt(
+                                mean_squared_error(
+                                    actual_numeric, predicted_numeric
+                                )
+                            )
 
-                available_metrics = (
-                    CLASSIFICATION_METRICS
-                    if task_type == "Classification"
-                    else REGRESSION_METRICS
-                )
+                        if "R²" in selected_metrics:
+                            results["R²"] = (
+                                r2_score(actual_numeric, predicted_numeric)
+                                if len(actual_numeric) >= 2
+                                else None
+                            )
 
-                selected_metrics = st.multiselect(
-                    "Select evaluation metrics",
-                    options=available_metrics,
-                    default=[available_metrics[0]]
-                )
+                        st.subheader("Evaluation results")
+                        for metric, value in results.items():
+                            if value is None:
+                                st.warning(
+                                    "R² requires at least two valid rows."
+                                )
+                            else:
+                                st.metric(metric, f"{value:.4f}")
 
-                if selected_metrics:
-                    st.write("### Selected configuration")
-                    st.write(f"**Task:** {task_type}")
-                    st.write(
-                        "**Metrics:** " + ", ".join(selected_metrics)
+                except (ValueError, TypeError):
+                    st.error(
+                        "Regression requires numeric actual and "
+                        "predicted values."
                     )
-                    st.info(
-                        "Configuration saved for this session. "
-                        "Metric calculation will be added next."
-                    )
-                else:
-                    st.warning("Select at least one evaluation metric.")
+                except Exception:
+                    st.error("Regression evaluation failed.")
 
-        except (pd.errors.ParserError, UnicodeDecodeError):
-            st.error(
-                "Could not read this CSV. Check that it contains "
-                "valid CSV data."
-            )
-
-        except Exception:
-            st.error(
-                "An unexpected error occurred while processing "
-                "the file. Check its format and try again."
-            )
-```
