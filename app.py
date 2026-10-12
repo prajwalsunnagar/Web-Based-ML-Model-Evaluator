@@ -9,9 +9,23 @@ st.set_page_config(
 )
 
 st.title("Web-Based ML Model Evaluator")
-st.write("Upload a CSV dataset to validate its structure.")
+st.write("Upload a CSV dataset to validate its structure and configure evaluation.")
 
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
+
+CLASSIFICATION_METRICS = [
+    "Accuracy",
+    "Precision",
+    "Recall",
+    "F1-score"
+]
+
+REGRESSION_METRICS = [
+    "MAE",
+    "MSE",
+    "RMSE",
+    "R²"
+]
 
 uploaded_file = st.file_uploader(
     "Upload your dataset",
@@ -26,7 +40,6 @@ if uploaded_file is not None:
         try:
             df = pd.read_csv(uploaded_file)
 
-            # Validate dataset structure
             if df.empty:
                 st.error("The uploaded CSV is empty.")
 
@@ -49,9 +62,8 @@ if uploaded_file is not None:
                     int(df.isnull().sum().sum())
                 )
 
-                st.subheader("Required column validation")
+                st.subheader("Column validation")
 
-                # Check column names
                 blank_columns = [
                     str(column)
                     for column in df.columns
@@ -65,7 +77,6 @@ if uploaded_file is not None:
                         f"{blank_columns}"
                     )
 
-                # Check duplicate column names
                 duplicate_columns = df.columns[
                     df.columns.duplicated()
                 ].tolist()
@@ -78,7 +89,6 @@ if uploaded_file is not None:
                 else:
                     st.success("Column names are unique.")
 
-                # Select target column
                 target_column = st.selectbox(
                     "Select the target column",
                     options=list(df.columns)
@@ -91,7 +101,7 @@ if uploaded_file is not None:
 
                     st.write(f"Selected target: **{target_column}**")
 
-                    if missing_targets > 0:
+                    if missing_targets:
                         st.warning(
                             f"The target column contains "
                             f"{missing_targets} missing values."
@@ -105,14 +115,45 @@ if uploaded_file is not None:
                     if df[target_column].nunique(dropna=True) < 2:
                         st.warning(
                             "The target column has fewer than "
-                            "two distinct non-missing values. "
-                            "Check whether it is suitable for evaluation."
+                            "two distinct non-missing values."
                         )
+
+                st.subheader("Evaluation configuration")
+
+                task_type = st.selectbox(
+                    "Select the evaluation task",
+                    ["Classification", "Regression"]
+                )
+
+                available_metrics = (
+                    CLASSIFICATION_METRICS
+                    if task_type == "Classification"
+                    else REGRESSION_METRICS
+                )
+
+                selected_metrics = st.multiselect(
+                    "Select evaluation metrics",
+                    options=available_metrics,
+                    default=[available_metrics[0]]
+                )
+
+                if selected_metrics:
+                    st.write("### Selected configuration")
+                    st.write(f"**Task:** {task_type}")
+                    st.write(
+                        "**Metrics:** " + ", ".join(selected_metrics)
+                    )
+                    st.info(
+                        "Configuration saved for this session. "
+                        "Metric calculation will be added next."
+                    )
+                else:
+                    st.warning("Select at least one evaluation metric.")
 
         except (pd.errors.ParserError, UnicodeDecodeError):
             st.error(
-                "Could not read this CSV. Check that the file "
-                "contains valid CSV data."
+                "Could not read this CSV. Check that it contains "
+                "valid CSV data."
             )
 
         except Exception:
