@@ -14,7 +14,7 @@ from sklearn.metrics import (
 
 st.set_page_config(
     page_title="ML Model Evaluator",
-    page_icon="📊",
+    page_icon="\U0001f4ca",
     layout="wide",
 )
 
@@ -26,7 +26,7 @@ MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 CLASSIFICATION_METRICS = [
     "Accuracy", "Precision", "Recall", "F1-score"
 ]
-REGRESSION_METRICS = ["MAE", "MSE", "RMSE", "R²"]
+REGRESSION_METRICS = ["MAE", "MSE", "RMSE", "R\u00b2"]
 
 uploaded_file = st.file_uploader(
     "Upload evaluation CSV",
@@ -175,9 +175,7 @@ if uploaded_file is not None:
 
             else:
                 try:
-                    actual_numeric = pd.to_numeric(
-                        actual, errors="raise"
-                    )
+                    actual_numeric = pd.to_numeric(actual, errors="raise")
                     predicted_numeric = pd.to_numeric(
                         predicted, errors="raise"
                     )
@@ -209,8 +207,8 @@ if uploaded_file is not None:
                                 )
                             )
 
-                        if "R²" in selected_metrics:
-                            results["R²"] = (
+                        if "R\u00b2" in selected_metrics:
+                            results["R\u00b2"] = (
                                 r2_score(actual_numeric, predicted_numeric)
                                 if len(actual_numeric) >= 2
                                 else None
@@ -220,7 +218,7 @@ if uploaded_file is not None:
                         for metric, value in results.items():
                             if value is None:
                                 st.warning(
-                                    "R² requires at least two valid rows."
+                                    "R\u00b2 requires at least two valid rows."
                                 )
                             else:
                                 st.metric(metric, f"{value:.4f}")
@@ -232,4 +230,3 @@ if uploaded_file is not None:
                     )
                 except Exception:
                     st.error("Regression evaluation failed.")
-
