@@ -5,6 +5,8 @@ Covers Sprint 1 task #5: Calculate selected evaluation metrics
 (Classification: Accuracy, Precision, Recall, F1-score)
 """
 
+from __future__ import annotations
+
 import pytest
 import pandas as pd
 import numpy as np

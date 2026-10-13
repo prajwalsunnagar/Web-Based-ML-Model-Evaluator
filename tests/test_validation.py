@@ -6,6 +6,8 @@ Covers Sprint 1 tasks:
   #3  Validate required dataset columns
 """
 
+from __future__ import annotations
+
 import io
 import pandas as pd
 import pytest

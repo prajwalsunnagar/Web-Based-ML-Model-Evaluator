@@ -12,6 +12,8 @@ Tests focus on:
 - Single-class classification rejection
 """
 
+from __future__ import annotations
+
 import pytest
 import pandas as pd
 import numpy as np
@@ -133,11 +135,11 @@ class TestInfiniteValues:
             "actual":    [1.0, float("nan"), 3.0],
             "predicted": [1.0, 2.0, float("nan")],
         })
-        # Only 1 valid row → ValueError (need >= 2 for most metrics)
-        with pytest.raises((ValueError, Exception)):
-            compute_regression_metrics(
-                df["actual"], df["predicted"], ["R\u00b2"]
-            )
+        # Only 1 valid row remains after dropping NaNs; R² is None when len < 2
+        r = compute_regression_metrics(
+            df["actual"], df["predicted"], ["R²"]
+        )
+        assert r["R²"] is None
 
 
 # ---------------------------------------------------------------------------

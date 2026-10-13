@@ -1,0 +1,16 @@
+image_id,terrain_actual,terrain_predicted,confidence
+IMG_001,Grassy,Grassy,0.94
+IMG_002,Rocky,Rocky,0.89
+IMG_003,Sandy,Sandy,0.92
+IMG_004,Grassy,Grassy,0.88
+IMG_005,Marshy,Marshy,0.91
+IMG_006,Rocky,Sandy,0.65
+IMG_007,Sandy,Sandy,0.95
+IMG_008,Grassy,Grassy,0.90
+IMG_009,Marshy,Marshy,0.87
+IMG_010,Rocky,Rocky,0.93
+IMG_011,Sandy,Sandy,0.86
+IMG_012,Grassy,Rocky,0.58
+IMG_013,Marshy,Marshy,0.92
+IMG_014,Rocky,Rocky,0.96
+IMG_015,Sandy,Sandy,0.89

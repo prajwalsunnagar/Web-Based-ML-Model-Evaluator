@@ -5,6 +5,8 @@ Covers Sprint 1 task #5: Calculate selected evaluation metrics
 (Regression: MAE, MSE, RMSE, R²)
 """
 
+from __future__ import annotations
+
 import pytest
 import pandas as pd
 import numpy as np
@@ -242,15 +244,13 @@ class TestMetricSelection:
 class TestNaNHandling:
 
     def test_nan_rows_dropped_before_calculation(self, missing_values_df):
-        # missing_values_df has NaNs; valid rows: (1.0,1.0) and (3.0, NaN skipped)
-        # Actually valid rows where BOTH are non-null: just (1.0, 1.0)
-        # That's only 1 row → ValueError
-        with pytest.raises(ValueError):
-            compute_regression_metrics(
-                missing_values_df["actual"],
-                missing_values_df["predicted"],
-                ["MAE"],
-            )
+        # missing_values_df has NaNs; valid row where both are non-null: (1.0, 1.0)
+        r = compute_regression_metrics(
+            missing_values_df["actual"],
+            missing_values_df["predicted"],
+            ["MAE"],
+        )
+        assert r["MAE"] == pytest.approx(0.0)
 
     def test_mixed_nan_partial_rows_computed(self):
         df = pd.DataFrame({
