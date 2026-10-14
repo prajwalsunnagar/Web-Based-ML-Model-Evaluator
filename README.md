@@ -62,24 +62,36 @@ Web-Based-ML-Model-Evaluator/
 │
 ├── app.py                        # Main Streamlit application
 ├── requirements.txt              # Python dependencies
-├── README.md
+├── README.md                     # Project documentation & execution guide
 │
-├── docs/
+├── sample_data/                  # Verification datasets
+│   ├── classification_sample.csv # Classification test data (15 rows)
+│   └── regression_sample.csv     # Regression test data (15 rows)
+│
+├── docs/                         # Specifications & deliverables
 │   ├── SRS.docx                  # Software Requirements Specification
 │   ├── Architecture-Design.docx  # Architecture and Design Document
 │   ├── Test-Plan.docx            # Test Plan
-│   └── SPRINT-PLAN.md            # Agile sprint plan
+│   ├── SPRINT-PLAN.md            # Agile sprint plan & user stories
+│   ├── PART2_DELIVERABLE_AUDIT.md# Part-2 deliverables audit matrix
+│   ├── TEST-EXECUTION-REPORT.md  # Test results & Requirement Traceability Matrix
+│   ├── DEVIATIONS-AND-NOTES.md   # Architectural alignment & design decisions
+│   └── DEMO_CHECKLIST.md         # Sprint demo outlines & video release checklists
 │
-├── tests/
+├── tests/                        # Automated unit tests (72 passing tests)
 │   ├── conftest.py               # Shared pytest fixtures
 │   ├── test_validation.py        # File and column validation tests
 │   ├── test_classification.py    # Classification metric tests
 │   ├── test_regression.py        # Regression metric tests
 │   └── test_error_handling.py    # Error path and edge case tests
 │
+├── scripts/                      # Automation & sync scripts
+│   └── update_github_backlog.py  # GitHub issues updater script
+│
 └── .github/
+    ├── pull_request_template.md  # Standard PR review template
     └── workflows/
-        └── ci.yml                # GitHub Actions CI pipeline
+        └── ci.yml                # GitHub Actions CI multi-version pipeline
 ```
 
 ---
@@ -87,26 +99,33 @@ Web-Based-ML-Model-Evaluator/
 ## 6. Project Documentation
 
 ### Software Requirements Specification
-
-The SRS documents the system requirements, project scope, functional requirements, non-functional requirements, constraints, and other relevant software requirements.
-
-[View SRS](docs/SRS.docx)
+The SRS documents system requirements, project scope, functional requirements (`FR-01` to `FR-14`), non-functional requirements (`NFR-01` to `NFR-12`), constraints, and business rules.
+- [View SRS](docs/SRS.docx)
 
 ### Architecture and Design
+The Architecture and Design document describes the proposed layered web architecture, major components, system interactions, data flow, and design decisions.
+- [View Architecture Design](docs/Architecture-Design.docx)
 
-The Architecture and Design document describes the proposed system architecture, major components, system interactions, data flow, and design decisions.
+### Test Plan & Test Execution Report
+The Test Plan defines the testing approach, test objectives, scenarios, test cases (TC-01 through TC-10), and expected results. The Test Execution Report documents verified execution evidence and the Requirement Traceability Matrix (RTM).
+- [View Test Plan](docs/Test-Plan.docx)
+- [View Test Execution Report & Traceability Matrix](docs/TEST-EXECUTION-REPORT.md)
 
-[View Architecture Design](docs/Architecture-Design.docx)
+### Agile Sprint Plan & Backlog
+The Sprint Plan defines the delivery milestones, Fibonacci story point scale, team allocations, Definition of Done, demonstration requirements, and detailed user stories for all 10 GitHub backlog issues across Sprint 1 and Sprint 2.
+- [View Sprint Plan](docs/SPRINT-PLAN.md)
 
-### Test Plan
+### Part 2 Deliverables Audit & Traceability
+The Deliverables Audit details the complete verification checklist across all Part-2 requirements, remote vs. local analysis, GitHub project setup instructions, and upcoming milestone deliverables.
+- [View Part-2 Deliverable Audit](docs/PART2_DELIVERABLE_AUDIT.md)
 
-The Test Plan defines the testing approach, test objectives, test scenarios, test cases, and expected results for the system.
+### Architectural Alignment & Deviations
+Documents the alignment of the implementation with SAD Section 4.1/4.2, single-tenant local scoping, and the formal development freeze declaration.
+- [View Deviations & Architecture Notes](docs/DEVIATIONS-AND-NOTES.md)
 
-[View Test Plan](docs/Test-Plan.docx)
-
-### Sprint Plan
-
-[View Sprint Plan](docs/SPRINT-PLAN.md)
+### Demonstration Checklists & Video Outlines
+Provides 60-second (Sprint 1) and 120-second (Sprint 2) timestamped walkthrough outlines, pre-demo setup steps, and repository video upload guidelines.
+- [View Demo Checklists](docs/DEMO_CHECKLIST.md)
 
 ---
 
