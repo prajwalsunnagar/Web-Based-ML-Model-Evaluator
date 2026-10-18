@@ -12,14 +12,20 @@ SUPPORTED_METRICS = {
     "Classification": ["Accuracy", "Precision", "Recall", "F1-score"],
     "Regression": ["MAE", "MSE", "RMSE", "R²"],
 }
+CLASSIFICATION_AVERAGES = ["weighted", "macro", "micro", "binary"]
 
 
-def calculate_metrics(task_type: str, y_true: pd.Series, y_pred: pd.Series,
-                      selected_metrics: list[str]) -> tuple[dict[str, float | None], pd.DataFrame | None, int]:
+def calculate_metrics(
+    task_type: str,
+    y_true: pd.Series,
+    y_pred: pd.Series,
+    selected_metrics: list[str],
+    average: str = "weighted",
+    positive_label: object | None = None,
+) -> tuple[dict[str, float | None], pd.DataFrame | None, int]:
     if task_type not in SUPPORTED_METRICS:
         raise ValueError("Unsupported evaluation task.")
-    invalid = set(selected_metrics) - set(SUPPORTED_METRICS[task_type])
-    if invalid:
+    if set(selected_metrics) - set(SUPPORTED_METRICS[task_type]):
         raise ValueError("Selected metrics do not match the evaluation task.")
     if not selected_metrics:
         raise ValueError("Select at least one metric.")
@@ -34,18 +40,32 @@ def calculate_metrics(task_type: str, y_true: pd.Series, y_pred: pd.Series,
     if task_type == "Classification":
         if actual.nunique() < 2:
             raise ValueError("Classification evaluation requires at least two distinct actual classes.")
+        if average not in CLASSIFICATION_AVERAGES:
+            raise ValueError("Choose a supported classification averaging method.")
+        if average == "binary":
+            if actual.nunique() != 2:
+                raise ValueError("Binary averaging requires exactly two actual classes.")
+            if positive_label not in set(actual.unique()):
+                raise ValueError("Choose a positive class present in the actual values.")
+
+        common = {"average": average, "zero_division": 0}
+        if average == "binary":
+            common["pos_label"] = positive_label
         if "Accuracy" in selected_metrics:
             results["Accuracy"] = float(accuracy_score(actual, predicted))
         if "Precision" in selected_metrics:
-            results["Precision"] = float(precision_score(actual, predicted, average="weighted", zero_division=0))
+            results["Precision"] = float(precision_score(actual, predicted, **common))
         if "Recall" in selected_metrics:
-            results["Recall"] = float(recall_score(actual, predicted, average="weighted", zero_division=0))
+            results["Recall"] = float(recall_score(actual, predicted, **common))
         if "F1-score" in selected_metrics:
-            results["F1-score"] = float(f1_score(actual, predicted, average="weighted", zero_division=0))
+            results["F1-score"] = float(f1_score(actual, predicted, **common))
+
         labels = sorted(set(actual.unique()) | set(predicted.unique()), key=str)
-        matrix = pd.DataFrame(confusion_matrix(actual, predicted, labels=labels),
-                              index=pd.Index(labels, name="Actual"),
-                              columns=pd.Index(labels, name="Predicted"))
+        matrix = pd.DataFrame(
+            confusion_matrix(actual, predicted, labels=labels),
+            index=pd.Index(labels, name="Actual"),
+            columns=pd.Index(labels, name="Predicted"),
+        )
     else:
         try:
             actual_n = pd.to_numeric(actual, errors="raise")
