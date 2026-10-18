@@ -1,0 +1,65 @@
+"""Task-aware calculation of classification and regression metrics."""
+from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+from sklearn.metrics import (
+    accuracy_score, confusion_matrix, f1_score, mean_absolute_error,
+    mean_squared_error, precision_score, r2_score, recall_score,
+)
+
+SUPPORTED_METRICS = {
+    "Classification": ["Accuracy", "Precision", "Recall", "F1-score"],
+    "Regression": ["MAE", "MSE", "RMSE", "R²"],
+}
+
+
+def calculate_metrics(task_type: str, y_true: pd.Series, y_pred: pd.Series,
+                      selected_metrics: list[str]) -> tuple[dict[str, float | None], pd.DataFrame | None, int]:
+    if task_type not in SUPPORTED_METRICS:
+        raise ValueError("Unsupported evaluation task.")
+    invalid = set(selected_metrics) - set(SUPPORTED_METRICS[task_type])
+    if invalid:
+        raise ValueError("Selected metrics do not match the evaluation task.")
+    if not selected_metrics:
+        raise ValueError("Select at least one metric.")
+
+    valid = y_true.notna() & y_pred.notna()
+    actual, predicted = y_true[valid], y_pred[valid]
+    if len(actual) == 0:
+        raise ValueError("No valid rows remain after removing missing values.")
+
+    results: dict[str, float | None] = {}
+    matrix = None
+    if task_type == "Classification":
+        if actual.nunique() < 2:
+            raise ValueError("Classification evaluation requires at least two distinct actual classes.")
+        if "Accuracy" in selected_metrics:
+            results["Accuracy"] = float(accuracy_score(actual, predicted))
+        if "Precision" in selected_metrics:
+            results["Precision"] = float(precision_score(actual, predicted, average="weighted", zero_division=0))
+        if "Recall" in selected_metrics:
+            results["Recall"] = float(recall_score(actual, predicted, average="weighted", zero_division=0))
+        if "F1-score" in selected_metrics:
+            results["F1-score"] = float(f1_score(actual, predicted, average="weighted", zero_division=0))
+        labels = sorted(set(actual.unique()) | set(predicted.unique()), key=str)
+        matrix = pd.DataFrame(confusion_matrix(actual, predicted, labels=labels),
+                              index=pd.Index(labels, name="Actual"),
+                              columns=pd.Index(labels, name="Predicted"))
+    else:
+        try:
+            actual_n = pd.to_numeric(actual, errors="raise")
+            predicted_n = pd.to_numeric(predicted, errors="raise")
+        except (ValueError, TypeError) as exc:
+            raise ValueError("Regression requires numeric actual and predicted values.") from exc
+        if not (np.isfinite(actual_n).all() and np.isfinite(predicted_n).all()):
+            raise ValueError("Regression values must be finite numbers.")
+        if "MAE" in selected_metrics:
+            results["MAE"] = float(mean_absolute_error(actual_n, predicted_n))
+        if "MSE" in selected_metrics:
+            results["MSE"] = float(mean_squared_error(actual_n, predicted_n))
+        if "RMSE" in selected_metrics:
+            results["RMSE"] = float(np.sqrt(mean_squared_error(actual_n, predicted_n)))
+        if "R²" in selected_metrics:
+            results["R²"] = float(r2_score(actual_n, predicted_n)) if len(actual_n) >= 2 else None
+    return results, matrix, len(actual)
