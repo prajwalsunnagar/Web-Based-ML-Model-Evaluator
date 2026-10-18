@@ -4,7 +4,7 @@
 
 The **Web-Based ML Model Evaluator** is a web-based system designed to provide a structured platform for evaluating Machine Learning models.
 
-The project aims to simplify the process of evaluating ML models by providing a user-friendly web interface through which users can upload CSV datasets, select evaluation metrics, and view evaluation results.
+The project evaluates predictions supplied in a CSV; it does not load or run trained model files. Users upload actual and predicted values, select classification or regression metrics, and view results. The current app also keeps session-scoped run history, assigns each run an ID and timestamp, and offers JSON/CSV report downloads.
 
 The project follows a structured software engineering approach covering requirements analysis, system architecture, implementation, and testing.
 
@@ -60,7 +60,11 @@ The major project deliverables are:
 ```
 Web-Based-ML-Model-Evaluator/
 │
-├── app.py                        # Main Streamlit application
+├── app.py                        # Streamlit interface and result presentation
+├── evaluator/                    # CSV validation, metric engine, run lifecycle
+│   ├── validators.py             # Upload type, size, header, and dataset checks
+│   ├── metrics.py                 # Classification and regression calculations
+│   └── engine.py                  # Run IDs, status, metadata, safe errors
 ├── requirements.txt              # Python dependencies
 ├── README.md                     # Project documentation & execution guide
 │
@@ -171,9 +175,7 @@ The app will open in your browser at `http://localhost:8501`.
 
 ### Upload a CSV
 
-The CSV must have at least two columns:
-- One column containing **actual** labels or values.
-- One column containing **predicted** labels or values.
+The CSV must have at least two columns. Select one column containing **actual** labels or values and another containing **predicted** labels or values. Rows missing either selected value are excluded from that evaluation. Classification runs show a confusion matrix; regression runs show a residual summary. Run history is kept only for the current Streamlit browser session.
 
 ---
 
