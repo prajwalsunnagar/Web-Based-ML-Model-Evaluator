@@ -1,3 +1,5 @@
+> **Current-revision note (18 October 2026):** This report records test evidence from 12–13 October and predates the evaluator-module updates and direct module tests now on `main`. It is historical evidence only; check the latest GitHub Actions run before claiming the current revision passes.
+
 # Software Test Execution Report & Traceability Matrix
 
 **Project:** Web-Based ML Model Evaluator  
