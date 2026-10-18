@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 
 from evaluator.engine import EvaluationRun
-from evaluator.metrics import calculate_metrics
+from evaluator.metrics import calculate_metrics, regression_residual_summary
 from evaluator.validators import MAX_FILE_SIZE, parse_uploaded_csv
 
 
@@ -105,3 +105,12 @@ def test_run_records_failed_status_with_safe_validation_error():
     run.execute(pd.Series([1, 1]), pd.Series([1, 1]))
     assert run.status == "failed"
     assert "two distinct actual classes" in run.error_message
+
+
+def test_residual_summary_reports_mean_minimum_and_maximum_error():
+    summary = regression_residual_summary(
+        pd.Series([1.0, 2.0, 3.0]), pd.Series([1.5, 2.5, 2.0])
+    )
+    assert summary["Mean Error"] == pytest.approx(0.0)
+    assert summary["Minimum Error"] == pytest.approx(-0.5)
+    assert summary["Maximum Error"] == pytest.approx(1.0)
