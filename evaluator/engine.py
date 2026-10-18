@@ -17,6 +17,8 @@ class EvaluationRun:
     actual_column: str
     predicted_column: str
     selected_metrics: list[str]
+    average: str = "weighted"
+    positive_label: object | None = None
     run_id: str = field(default_factory=lambda: str(uuid4()))
     timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     status: str = "pending"
@@ -30,10 +32,15 @@ class EvaluationRun:
         self.status = "running"
         try:
             self.results, matrix, self.sample_count = calculate_metrics(
-                self.task_type, actual, predicted, self.selected_metrics
+                self.task_type,
+                actual,
+                predicted,
+                self.selected_metrics,
+                average=self.average,
+                positive_label=self.positive_label,
             )
             if matrix is not None:
-                self.confusion_labels = [str(x) for x in matrix.index]
+                self.confusion_labels = [str(value) for value in matrix.index]
                 self.confusion_matrix = matrix.values.tolist()
             self.status = "completed"
         except (ValueError, TypeError) as exc:
@@ -44,4 +51,7 @@ class EvaluationRun:
             self.status = "failed"
 
     def to_dict(self) -> dict:
-        return asdict(self)
+        result = asdict(self)
+        if self.positive_label is not None:
+            result["positive_label"] = str(self.positive_label)
+        return result
