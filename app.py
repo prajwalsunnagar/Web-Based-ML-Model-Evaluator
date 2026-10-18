@@ -7,7 +7,11 @@ import pandas as pd
 import streamlit as st
 
 from evaluator.engine import EvaluationRun
-from evaluator.metrics import CLASSIFICATION_AVERAGES, SUPPORTED_METRICS
+from evaluator.metrics import (
+    CLASSIFICATION_AVERAGES,
+    SUPPORTED_METRICS,
+    regression_residual_summary,
+)
 from evaluator.validators import parse_uploaded_csv
 
 st.set_page_config(page_title="ML Model Evaluator", page_icon="📊", layout="wide")
@@ -112,16 +116,9 @@ if uploaded_file is not None:
                 st.dataframe(matrix, use_container_width=True)
             elif task_type == "Regression":
                 st.subheader("Regression residual summary")
-                valid = df[actual_column].notna() & df[predicted_column].notna()
-                actual = pd.to_numeric(df.loc[valid, actual_column], errors="coerce")
-                predicted = pd.to_numeric(df.loc[valid, predicted_column], errors="coerce")
-                residuals = actual - predicted
-                residual_summary = pd.DataFrame([{
-                    "Mean Error": float(residuals.mean()),
-                    "Minimum Error": float(residuals.min()),
-                    "Maximum Error": float(residuals.max()),
-                    "Mean Absolute Error": float(residuals.abs().mean()),
-                }])
+                residual_summary = pd.DataFrame([regression_residual_summary(
+                    df[actual_column], df[predicted_column]
+                )])
                 st.dataframe(residual_summary, hide_index=True, use_container_width=True)
 
 if st.session_state.run_history:
