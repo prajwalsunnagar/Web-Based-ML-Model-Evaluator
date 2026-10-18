@@ -83,3 +83,23 @@ def calculate_metrics(
         if "R²" in selected_metrics:
             results["R²"] = float(r2_score(actual_n, predicted_n)) if len(actual_n) >= 2 else None
     return results, matrix, len(actual)
+
+
+def regression_residual_summary(
+    y_true: pd.Series, y_pred: pd.Series
+) -> dict[str, float]:
+    """Return signed prediction-error summaries after paired-null filtering."""
+    valid = y_true.notna() & y_pred.notna()
+    actual = pd.to_numeric(y_true[valid], errors="raise")
+    predicted = pd.to_numeric(y_pred[valid], errors="raise")
+    if len(actual) == 0:
+        raise ValueError("No valid rows remain after removing missing values.")
+    if not (np.isfinite(actual).all() and np.isfinite(predicted).all()):
+        raise ValueError("Regression values must be finite numbers.")
+    residuals = actual - predicted
+    return {
+        "Mean Error": float(residuals.mean()),
+        "Minimum Error": float(residuals.min()),
+        "Maximum Error": float(residuals.max()),
+        "Mean Absolute Error": float(residuals.abs().mean()),
+    }
