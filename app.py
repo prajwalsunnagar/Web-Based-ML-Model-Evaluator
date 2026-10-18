@@ -1,4 +1,7 @@
 
+import csv
+import io
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -37,6 +40,26 @@ if uploaded_file is not None:
     if uploaded_file.size > MAX_FILE_SIZE:
         st.error("File is too large. Maximum allowed size is 10 MB.")
         st.stop()
+
+    # pandas may silently rename repeated CSV headers (for example,
+    # `name,name` becomes `name,name.1`). Inspect the raw header first so
+    # the duplicate-column check below can reject the original input.
+    try:
+        raw_header = next(
+            csv.reader(
+                io.StringIO(uploaded_file.getvalue().decode("utf-8-sig"))
+            ),
+            [],
+        )
+    except UnicodeDecodeError:
+        st.error("Invalid CSV format. Please upload a valid CSV.")
+        st.stop()
+
+    if len(raw_header) != len(set(raw_header)):
+        st.error("Duplicate column names found. Rename them and retry.")
+        st.stop()
+
+    uploaded_file.seek(0)
 
     try:
         df = pd.read_csv(uploaded_file)
