@@ -70,7 +70,7 @@ Web-Based-ML-Model-Evaluator/
 │
 ├── sample_data/                  # Verification datasets
 │   ├── classification_sample.csv # Classification test data (15 rows)
-│   └── regression_sample.csv     # Regression test data (15 rows)
+│   └── regression_sample.csv     # Regression test data (10 rows)
 │
 ├── docs/                         # Specifications & deliverables
 │   ├── SRS.docx                  # Software Requirements Specification
