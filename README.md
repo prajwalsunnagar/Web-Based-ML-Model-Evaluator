@@ -82,7 +82,7 @@ Web-Based-ML-Model-Evaluator/
 │   ├── DEVIATIONS-AND-NOTES.md   # Architectural alignment & design decisions
 │   └── DEMO_CHECKLIST.md         # Sprint demo outlines & video release checklists
 │
-├── tests/                        # Automated unit tests (72 passing tests)
+├── tests/                        # Automated unit and evaluator-module tests
 │   ├── conftest.py               # Shared pytest fixtures
 │   ├── test_validation.py        # File and column validation tests
 │   ├── test_classification.py    # Classification metric tests
@@ -198,14 +198,9 @@ Tests cover:
 
 ## 11. Testing Status
 
-| Test Module | Status |
-|---|---|
-| File and column validation | ✅ Passing |
-| Classification metrics | ✅ Passing |
-| Regression metrics | ✅ Passing |
-| Error handling | ✅ Passing |
+The repository includes tests for validation, classification, regression, error handling, and the production evaluator modules. The evaluator module tests call the same validation and metric functions used by the app.
 
-CI runs automatically on every push and pull request.
+GitHub Actions runs the suite on Python 3.10, 3.11, and 3.12 for pushes and pull requests. Test results from before the evaluator-module tests were added do not verify the current revision; check the latest Actions run for current status.
 
 ---
 
