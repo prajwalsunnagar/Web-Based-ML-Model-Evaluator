@@ -27,7 +27,7 @@
 | **0:00 – 0:10** | **Introduction** | Introduce project: *Web-Based ML Model Evaluator*, highlighting that it simplifies verifying model outputs against ground truth. Show app header. | Project Overview |
 | **0:10 – 0:25** | **Dataset Ingestion & Validation** | Drag & drop `classification_sample.csv`. Show instant file size check (< 10 MB), schema validation badge, dataset summary metrics (15 rows, 4 columns, 0 missing). | `FR-01`, `FR-02`, `FR-03`, `FR-04` |
 | **0:25 – 0:40** | **Configuration & Mapping** | Map Ground Truth column to `terrain_actual` and Prediction column to `terrain_predicted`. In sidebar, select `Classification` and metrics: `Accuracy`, `Precision`, `Recall`, `F1 Score`. | `FR-04`, `FR-05`, `FR-06` |
-| **0:40 – 0:55** | **Execution & KPI Results** | Click **Run Evaluation**. Show the newly generated unique `run_id`, metric KPI cards (Accuracy: 0.8667, F1: 0.8667), and the confusion matrix crosstab. | `FR-07`, `FR-08` |
+| **0:40 – 0:55** | **Execution & KPI Results** | Click **Run Evaluation**. Show the generated `run_id`, selected metric KPI cards, and the confusion matrix crosstab. | `FR-07`, `FR-08` |
 | **0:55 – 1:00** | **Conclusion** | Mention Sprint 1 core workflow is fully operational and verified by automated unit tests. | Sprint 1 DoD |
 
 ---
@@ -46,7 +46,7 @@
 | **0:00 – 0:25** | **Classification Run & Report Export** | Complete a classification run with `classification_sample.csv`. Switch to the **Export Report** tab and download `evaluation_report.json` and `metrics_summary.csv`. Show files downloaded locally. | `FR-08`, `FR-13`, `FR-14` |
 | **0:25 – 0:55** | **Regression Task Support** | Switch sidebar to `Regression`. Upload `sample_data/regression_sample.csv`. Map `elevation_actual` to `elevation_predicted`. Select `MAE`, `MSE`, `RMSE`, `R²`. Click **Run Evaluation**. Show metric cards and residual error stats. | `FR-05`, `FR-06`, `FR-07`, `FR-08` |
 | **0:55 – 1:20** | **Error Handling & Robustness** | Test invalid inputs live: upload a non-CSV or empty file to demonstrate safe user-actionable error messages without crashes. Highlight sidebar **Session Run History** showing prior runs with status badges. | `FR-09`, `FR-10`, `FR-11`, `NFR-02` |
-| **1:20 – 1:40** | **Automated Testing Suite** | Switch to terminal window. Run `pytest -v tests/` demonstrating all 10 unit test cases passing in under 2 seconds. | `NFR-01`, `NFR-03`, `TC-01`–`TC-09` |
+| **1:20 – 1:40** | **Automated Testing Suite** | Show the current GitHub Actions run for the latest commit, or run `pytest -v tests/` locally and show its actual result. Include the direct evaluator-module tests and report the observed count and duration; do not reuse historical counts. | `NFR-01`, `NFR-03`, `TC-01`–`TC-09` |
 | **1:40 – 2:00** | **CI Automation & Development Freeze** | Show GitHub repository with green GitHub Actions CI badge, all 10 backlog issues closed/tracked, and declare development frozen for Part-2 submission. | Deliverable Part C, Freeze |
 
 ---
@@ -89,8 +89,8 @@ Once recorded using screen recording software (e.g., OBS Studio, QuickTime, macO
 
 - [x] Code freeze: No new features introduced; only verified bug fixes and documentation.
 - [x] Core modular engine separated in `evaluator/` (`validators.py`, `metrics.py`, `engine.py`).
-- [x] All 10 test cases in `tests/test_evaluator.py` passing cleanly.
-- [x] Flake8 linting passing with 0 syntax or import errors.
+- [ ] Run the current test suite, including `tests/test_evaluator_modules.py`, and record the verified result.
+- [ ] Re-run linting against the current source and record the verified result.
 - [x] CI workflow in `.github/workflows/ci.yml` updated and ready.
 - [ ] Both demo videos recorded and linked.
 - [ ] Final tag created (e.g., `git tag v1.0.0-part2-freeze`).
