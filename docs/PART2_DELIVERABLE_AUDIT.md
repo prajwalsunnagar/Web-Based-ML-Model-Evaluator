@@ -1,3 +1,5 @@
+> **Snapshot note (18 October 2026):** This audit includes remote/local status observations dated 12–13 October. It predates the evaluator implementation and documentation changes subsequently merged to `main`; do not treat its code-state or CI observations as current. The Project-board setup and demo-video status still require live verification.
+
 # Software Engineering Mini-Project Deliverables — Part 2: Comprehensive Deliverable Audit
 
 **Project:** Web-Based ML Model Evaluator  
