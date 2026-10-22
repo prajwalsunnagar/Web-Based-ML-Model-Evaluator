@@ -29,6 +29,8 @@ def calculate_metrics(
         raise ValueError("Selected metrics do not match the evaluation task.")
     if not selected_metrics:
         raise ValueError("Select at least one metric.")
+    if len(y_true) != len(y_pred):
+        raise ValueError("Actual and predicted sequences must have the same length.")
 
     valid = y_true.notna() & y_pred.notna()
     actual, predicted = y_true[valid], y_pred[valid]
@@ -89,6 +91,8 @@ def regression_residual_summary(
     y_true: pd.Series, y_pred: pd.Series
 ) -> dict[str, float]:
     """Return signed prediction-error summaries after paired-null filtering."""
+    if len(y_true) != len(y_pred):
+        raise ValueError("Actual and predicted sequences must have the same length.")
     valid = y_true.notna() & y_pred.notna()
     actual = pd.to_numeric(y_true[valid], errors="raise")
     predicted = pd.to_numeric(y_pred[valid], errors="raise")

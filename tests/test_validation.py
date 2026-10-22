@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import io
 import pandas as pd
-import pytest
 
 
 # ---------------------------------------------------------------------------

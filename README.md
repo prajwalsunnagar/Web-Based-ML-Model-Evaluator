@@ -65,12 +65,13 @@ Web-Based-ML-Model-Evaluator/
 │   ├── validators.py             # Upload type, size, header, and dataset checks
 │   ├── metrics.py                 # Classification and regression calculations
 │   └── engine.py                  # Run IDs, status, metadata, safe errors
-├── requirements.txt              # Python dependencies
+├── requirements.txt              # Core runtime dependencies
+├── requirements-dev.txt          # Testing, coverage, and linting tools
 ├── README.md                     # Project documentation & execution guide
 │
 ├── sample_data/                  # Verification datasets
-│   ├── classification_sample.csv # Classification test data (15 rows)
-│   └── regression_sample.csv     # Regression test data (10 rows)
+│   ├── classification_sample.csv # Classification test data (15 rows, 4 classes)
+│   └── regression_sample.csv     # Regression test data (10 rows, numeric targets)
 │
 ├── docs/                         # Specifications & deliverables
 │   ├── SRS.docx                  # Software Requirements Specification
@@ -80,14 +81,18 @@ Web-Based-ML-Model-Evaluator/
 │   ├── PART2_DELIVERABLE_AUDIT.md# Part-2 deliverables audit matrix
 │   ├── TEST-EXECUTION-REPORT.md  # Test results & Requirement Traceability Matrix
 │   ├── DEVIATIONS-AND-NOTES.md   # Architectural alignment & design decisions
-│   └── DEMO_CHECKLIST.md         # Sprint demo outlines & video release checklists
+│   ├── sprint-1-deviations.md    # Verified document compliance & Sprint 1 deviations
+│   ├── DEMO_CHECKLIST.md         # Sprint demo outlines & video release checklists
+│   └── demo/                     # Sprint demo assets and scripts
+│       └── sprint-1-narration-script.md # 60-second narration script & checklist
 │
 ├── tests/                        # Automated unit and evaluator-module tests
 │   ├── conftest.py               # Shared pytest fixtures
 │   ├── test_validation.py        # File and column validation tests
 │   ├── test_classification.py    # Classification metric tests
 │   ├── test_regression.py        # Regression metric tests
-│   └── test_error_handling.py    # Error path and edge case tests
+│   ├── test_error_handling.py    # Error path and edge case tests
+│   └── test_evaluator_modules.py # Evaluator service & end-to-end sample tests
 │
 ├── scripts/                      # Automation & sync scripts
 │   └── update_github_backlog.py  # GitHub issues updater script
@@ -95,7 +100,7 @@ Web-Based-ML-Model-Evaluator/
 └── .github/
     ├── pull_request_template.md  # Standard PR review template
     └── workflows/
-        └── ci.yml                # GitHub Actions CI multi-version pipeline
+        └── ci.yml                # GitHub Actions CI multi-version pipeline (lint, build, test)
 ```
 
 ---
@@ -115,6 +120,10 @@ The Test Plan defines the testing approach, test objectives, scenarios, test cas
 - [View Test Plan](docs/Test-Plan.docx)
 - [View Test Execution Report & Traceability Matrix](docs/TEST-EXECUTION-REPORT.md)
 
+### Sprint 1 Deviations & Document Compliance
+Provides a comprehensive clause-by-clause comparison of the Sprint 1 implementation against the approved SRS, SAD, and Test Plan, detailing verified architectural decisions, single-tenant session scope, and justification for direct module integration.
+- [View Sprint 1 Deviations & Compliance](docs/sprint-1-deviations.md)
+
 ### Agile Sprint Plan & Backlog
 The Sprint Plan defines the delivery milestones, Fibonacci story point scale, team allocations, Definition of Done, demonstration requirements, and detailed user stories for all 10 GitHub backlog issues across Sprint 1 and Sprint 2.
 - [View Sprint Plan](docs/SPRINT-PLAN.md)
@@ -127,9 +136,10 @@ The Deliverables Audit details the complete verification checklist across all Pa
 Documents the alignment of the implementation with SAD Section 4.1/4.2, single-tenant local scoping, and the formal development freeze declaration.
 - [View Deviations & Architecture Notes](docs/DEVIATIONS-AND-NOTES.md)
 
-### Demonstration Checklists & Video Outlines
-Provides 60-second (Sprint 1) and 120-second (Sprint 2) timestamped walkthrough outlines, pre-demo setup steps, and repository video upload guidelines.
+### Demonstration Checklists & Video Scripts
+Provides 60-second (Sprint 1) and 120-second (Sprint 2) timestamped walkthrough outlines, pre-demo setup steps, video upload guidelines, and narration scripts.
 - [View Demo Checklists](docs/DEMO_CHECKLIST.md)
+- [View Sprint 1 Demo Narration Script & Checklist](docs/demo/sprint-1-narration-script.md)
 
 ---
 
@@ -148,59 +158,89 @@ Provides 60-second (Sprint 1) and 120-second (Sprint 2) timestamped walkthrough 
 
 | Layer | Technology |
 |---|---|
-| Language | Python 3.10+ |
+| Language | Python 3.10+ (tested on 3.10, 3.11, 3.12) |
 | Web Framework | Streamlit >= 1.35.0 |
 | Data Processing | pandas >= 2.2.0, numpy >= 1.26.0 |
 | ML Metrics | scikit-learn >= 1.4.0 |
-| Testing | pytest |
-| CI/CD | GitHub Actions |
+| Testing & Coverage | pytest >= 8.0.0, pytest-cov >= 5.0.0 |
+| Code Quality / Linting | flake8 >= 7.0.0 |
+| CI/CD | GitHub Actions (Matrix: Python 3.10, 3.11, 3.12) |
 
 ---
 
 ## 9. Running the Application
 
-### Install dependencies
+### 1. Set up a virtual environment
 
 ```bash
-pip install -r requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-### Start the app
+### 2. Install dependencies
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt -r requirements-dev.txt
+```
+
+### 3. Start the application
 
 ```bash
 streamlit run app.py
 ```
 
-The app will open in your browser at `http://localhost:8501`.
+The application will launch and open in your browser at `http://localhost:8501`.
 
-### Upload a CSV
+### 4. Upload and evaluate a dataset
 
-The CSV must have at least two columns. Select one column containing **actual** labels or values and another containing **predicted** labels or values. Rows missing either selected value are excluded from that evaluation. Classification runs show a confusion matrix; regression runs show a residual summary. Run history is kept only for the current Streamlit browser session.
+1. In the file uploader, upload a valid `.csv` file (e.g., `sample_data/classification_sample.csv` or `sample_data/regression_sample.csv`).
+2. Verify the instant upload feedback, file size guard (< 10 MB), and dataset summary preview.
+3. Select the evaluation task (**Classification** or **Regression**).
+4. Map the **Actual values column** (ground truth) and **Predicted values column** (model predictions).
+5. Select desired metrics (e.g., Accuracy, Precision, Recall, F1-score for classification; MAE, MSE, RMSE, R² for regression).
+6. Click **Calculate evaluation metrics** to execute the evaluation run.
+7. Inspect the generated KPI metric cards, detailed table, confusion matrix (classification) or residual error summary (regression), and session run history.
 
 ---
 
-## 10. Testing
+## 10. Code Quality, Linting & Testing
 
-Run the automated test suite with:
-
+### Run Code Quality & Lint Checks
 ```bash
-pytest tests/ -v
+flake8 app.py evaluator/ tests/ --max-line-length=120 --exclude=.venv
 ```
 
-Tests cover:
-- File type and size validation
-- Column validation
-- Classification metric calculation (Accuracy, Precision, Recall, F1-score)
-- Regression metric calculation (MAE, MSE, RMSE, R²)
-- Error handling for edge cases
+### Run Build & Compilation Checks
+```bash
+python3 -m py_compile app.py evaluator/*.py tests/*.py
+```
+
+### Run the Automated Test Suite with Coverage
+```bash
+pytest tests/ -v --tb=short --cov=evaluator --cov=. --cov-report=term-missing
+```
+
+Tests verify:
+- **File & Upload Validation (`test_validation.py`):** File format (.csv), MIME type validation, 10 MB size limits, empty file handling.
+- **Data Structure Validation (`test_validation.py`, `test_evaluator_modules.py`):** Column count ($\ge 2$), duplicate column detection, unnamed/blank header handling.
+- **Classification Engine (`test_classification.py`, `test_evaluator_modules.py`):** Binary and multiclass accuracy, precision, recall, F1-score with weighted/macro/micro averaging, confusion matrix.
+- **Regression Engine (`test_regression.py`, `test_evaluator_modules.py`):** MAE, MSE, RMSE, R² calculation, signed residual summaries, $N < 2$ edge cases.
+- **Robustness & Error Handling (`test_error_handling.py`):** Same column guard, non-numeric regression inputs, infinite values, single-class detection, sequence length matching, sanitized error messages without traceback leakage.
+- **End-to-End Verification (`test_evaluator_modules.py`):** Direct testing using committed sample datasets (`sample_data/classification_sample.csv` and `sample_data/regression_sample.csv`).
+- **Repeatability & Determinism (`test_evaluator_modules.py`):** Verified repeatable floating-point outputs across repeated runs within `1e-6`.
 
 ---
 
-## 11. Testing Status
+## 11. CI/CD & Testing Status
 
-The repository includes tests for validation, classification, regression, error handling, and the production evaluator modules. The evaluator module tests call the same validation and metric functions used by the app.
-
-GitHub Actions runs the suite on Python 3.10, 3.11, and 3.12 for pushes and pull requests. Test results from before the evaluator-module tests were added do not verify the current revision; check the latest Actions run for current status.
+- **Automated Tests:** 92 automated tests passing with 100% pass rate.
+- **Evaluator Modules Coverage:** ~90% line coverage on core business logic (`evaluator/`).
+- **GitHub Actions Pipeline:** Configured in `.github/workflows/ci.yml` across Python 3.10, 3.11, and 3.12. Each workflow run executes:
+  1. Dependency installation (`requirements.txt` + `requirements-dev.txt`)
+  2. Flake8 PEP 8 linting
+  3. Python module compilation check
+  4. Pytest test suite with line-by-line coverage reporting
 
 ---
 

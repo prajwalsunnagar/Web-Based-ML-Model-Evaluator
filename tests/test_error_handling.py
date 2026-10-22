@@ -31,7 +31,6 @@ class TestSameColumnSelection:
     """Guard against user selecting the same column for both actual/predicted."""
 
     def test_identical_columns_detected(self):
-        df = pd.DataFrame({"col": [1, 2, 3], "other": [4, 5, 6]})
         actual_col = "col"
         predicted_col = "col"
         assert actual_col == predicted_col  # UI guard — should show error

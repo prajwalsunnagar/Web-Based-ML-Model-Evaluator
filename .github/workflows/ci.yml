@@ -2,12 +2,14 @@ name: CI
 
 on:
   push:
+    branches: ["main", "feature/**", "fix/**"]
   pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
   test:
-    name: Run Tests (Python ${{ matrix.python-version }})
+    name: Lint, Build & Test (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -25,10 +27,18 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt pytest pytest-cov
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Code style and lint check (flake8)
+        run: flake8 app.py evaluator/ tests/ --max-line-length=120 --exclude=.venv
+
+      - name: Production / build compilation check
+        run: python -m py_compile app.py evaluator/*.py tests/*.py
 
       - name: Run pytest with coverage
-        run: pytest tests/ -v --tb=short --cov=. --cov-report=term-missing
+        run: pytest tests/ -v --tb=short --cov=evaluator --cov=. --cov-report=term-missing
 
       - name: Confirm workflow completed
-        run: echo "All tests passed on Python ${{ matrix.python-version }}!"
+        run: echo "All linting, build, and test checks passed on Python ${{ matrix.python-version }}!"
