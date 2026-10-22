@@ -5,7 +5,6 @@ conftest.py — Shared pytest fixtures for the ML Model Evaluator test suite.
 import io
 import pytest
 import pandas as pd
-import numpy as np
 
 
 # ---------------------------------------------------------------------------
