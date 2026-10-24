@@ -28,6 +28,26 @@ def test_csv_upload_rejects_invalid_mime_type():
     assert "content type" in error
 
 
+@pytest.mark.parametrize(
+    "mime",
+    [
+        "text/csv",
+        "application/csv",
+        "application/vnd.ms-excel",
+        "text/plain",
+        "application/octet-stream",
+        "text/comma-separated-values",
+        "application/x-csv",
+        "text/x-csv",
+    ],
+)
+def test_csv_upload_accepts_standard_mime_types(mime):
+    frame, error = parse_uploaded_csv("rows.csv", b"a,b\n1,2\n", mime)
+    assert error is None
+    assert frame is not None
+    assert len(frame) == 1
+
+
 def test_csv_upload_rejects_header_without_data_rows():
     frame, error = parse_uploaded_csv("rows.csv", b"a,b\n")
     assert frame is None

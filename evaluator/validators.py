@@ -35,6 +35,7 @@ def parse_uploaded_csv(
     accepted_types = {
         "text/csv", "application/csv", "application/vnd.ms-excel",
         "text/plain", "application/octet-stream",
+        "text/comma-separated-values", "application/x-csv", "text/x-csv",
     }
     if mime_type and mime_type.lower() not in accepted_types:
         return None, "Unsupported file content type. Please upload a CSV file."
