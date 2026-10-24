@@ -48,6 +48,16 @@ def test_csv_upload_accepts_standard_mime_types(mime):
     assert len(frame) == 1
 
 
+def test_csv_upload_rejects_empty_and_whitespace_bytes():
+    frame1, error1 = parse_uploaded_csv("empty.csv", b"")
+    assert frame1 is None
+    assert "empty" in error1.lower()
+
+    frame2, error2 = parse_uploaded_csv("spaces.csv", b"   \n\n  \t ")
+    assert frame2 is None
+    assert "empty" in error2.lower()
+
+
 def test_csv_upload_rejects_header_without_data_rows():
     frame, error = parse_uploaded_csv("rows.csv", b"a,b\n")
     assert frame is None

@@ -42,6 +42,8 @@ def parse_uploaded_csv(
     size_error = validate_file_size(len(raw))
     if size_error:
         return None, size_error
+    if not raw or not raw.strip():
+        return None, "Uploaded file is empty. Please upload a CSV with data."
 
     try:
         text = raw.decode("utf-8-sig")
