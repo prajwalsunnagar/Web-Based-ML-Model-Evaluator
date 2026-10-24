@@ -123,6 +123,17 @@ def test_binary_average_requires_positive_class():
         )
 
 
+def test_confusion_matrix_natural_numeric_label_ordering():
+    actual = pd.Series([0, 1, 2, 10])
+    predicted = pd.Series([0, 1, 2, 10])
+    _, matrix, _ = calculate_metrics(
+        "Classification", actual, predicted, ["Accuracy"]
+    )
+    assert matrix is not None
+    assert list(matrix.index) == [0, 1, 2, 10]
+    assert list(matrix.columns) == [0, 1, 2, 10]
+
+
 def test_regression_metrics_and_row_count():
     results, matrix, count = calculate_metrics(
         "Regression", pd.Series([1.0, 2.0]), pd.Series([1.5, 2.5]),

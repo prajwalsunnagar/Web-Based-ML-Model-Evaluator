@@ -62,7 +62,11 @@ def calculate_metrics(
         if "F1-score" in selected_metrics:
             results["F1-score"] = float(f1_score(actual, predicted, **common))
 
-        labels = sorted(set(actual.unique()) | set(predicted.unique()), key=str)
+        unique_labels = set(actual.unique()) | set(predicted.unique())
+        try:
+            labels = sorted(unique_labels)
+        except TypeError:
+            labels = sorted(unique_labels, key=str)
         matrix = pd.DataFrame(
             confusion_matrix(actual, predicted, labels=labels),
             index=pd.Index(labels, name="Actual"),
