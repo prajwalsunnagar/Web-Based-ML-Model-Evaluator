@@ -177,6 +177,12 @@ def test_residual_summary_reports_mean_minimum_and_maximum_error():
     assert summary["Mean Error"] == pytest.approx(0.0)
     assert summary["Minimum Error"] == pytest.approx(-0.5)
     assert summary["Maximum Error"] == pytest.approx(1.0)
+    assert summary["Residual Standard Deviation"] > 0.0
+
+    single_summary = regression_residual_summary(
+        pd.Series([10.0]), pd.Series([12.0])
+    )
+    assert single_summary["Residual Standard Deviation"] == pytest.approx(0.0)
 
 
 def test_residual_summary_rejects_non_numeric_values():

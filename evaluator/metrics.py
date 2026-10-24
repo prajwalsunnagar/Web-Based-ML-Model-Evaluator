@@ -108,8 +108,10 @@ def regression_residual_summary(
     if not (np.isfinite(actual).all() and np.isfinite(predicted).all()):
         raise ValueError("Regression values must be finite numbers.")
     residuals = actual - predicted
+    std_error = float(residuals.std(ddof=1)) if len(residuals) > 1 else 0.0
     return {
         "Mean Error": float(residuals.mean()),
+        "Residual Standard Deviation": std_error,
         "Minimum Error": float(residuals.min()),
         "Maximum Error": float(residuals.max()),
         "Mean Absolute Error": float(residuals.abs().mean()),
