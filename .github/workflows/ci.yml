@@ -7,6 +7,10 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Lint, Build & Test (Python ${{ matrix.python-version }})
@@ -38,7 +42,7 @@ jobs:
         run: python -m py_compile app.py evaluator/*.py tests/*.py
 
       - name: Run pytest with coverage
-        run: pytest tests/ -v --tb=short --cov=evaluator --cov=. --cov-report=term-missing
+        run: pytest tests/ -v --tb=short --cov=evaluator --cov=app --cov-report=term-missing
 
       - name: Confirm workflow completed
         run: echo "All linting, build, and test checks passed on Python ${{ matrix.python-version }}!"

@@ -18,9 +18,11 @@ import pytest
 import pandas as pd
 import numpy as np
 
-from tests.test_validation import validate_dataframe, validate_file_size
-from tests.test_regression import compute_regression_metrics
+from evaluator.metrics import regression_residual_summary
+from evaluator.validators import parse_uploaded_csv
 from tests.test_classification import compute_classification_metrics
+from tests.test_regression import compute_regression_metrics
+from tests.test_validation import validate_dataframe, validate_file_size
 
 
 # ---------------------------------------------------------------------------
@@ -203,3 +205,47 @@ class TestColumnCountGuards:
     def test_zero_column_df_fails(self):
         df = pd.DataFrame()
         assert validate_dataframe(df) is not None
+
+
+# ---------------------------------------------------------------------------
+# Tests — empty upload bytes
+# ---------------------------------------------------------------------------
+
+class TestEmptyUploadBytes:
+
+    def test_zero_length_bytes_rejected(self):
+        frame, err = parse_uploaded_csv("empty.csv", b"")
+        assert frame is None
+        assert err is not None
+        assert "empty" in err.lower()
+
+    def test_whitespace_bytes_rejected(self):
+        frame, err = parse_uploaded_csv("spaces.csv", b"   \r\n\t  \n")
+        assert frame is None
+        assert err is not None
+        assert "empty" in err.lower()
+
+
+# ---------------------------------------------------------------------------
+# Tests — residual summary edge cases and errors
+# ---------------------------------------------------------------------------
+
+class TestResidualSummaryErrors:
+
+    def test_non_numeric_residual_raises(self):
+        with pytest.raises(ValueError, match="numeric"):
+            regression_residual_summary(
+                pd.Series(["bad", "values"]), pd.Series([1.0, 2.0])
+            )
+
+    def test_infinite_residual_raises(self):
+        with pytest.raises(ValueError, match="finite"):
+            regression_residual_summary(
+                pd.Series([np.inf, 2.0]), pd.Series([1.0, 2.0])
+            )
+
+    def test_mismatched_length_residual_raises(self):
+        with pytest.raises(ValueError, match="same length"):
+            regression_residual_summary(
+                pd.Series([1.0, 2.0, 3.0]), pd.Series([1.0, 2.0])
+            )

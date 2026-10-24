@@ -6,7 +6,7 @@ import pytest
 
 from evaluator.engine import EvaluationRun
 from evaluator.metrics import calculate_metrics, regression_residual_summary
-from evaluator.validators import MAX_FILE_SIZE, parse_uploaded_csv
+from evaluator.validators import MAX_FILE_SIZE, parse_uploaded_csv, validate_dataframe
 
 
 def test_upload_validation_rejects_type_and_size_before_parsing():
@@ -22,10 +22,62 @@ def test_duplicate_header_message_names_duplicate():
     assert "actual" in error
 
 
+def test_validate_dataframe_deduplicates_repeated_column_names():
+    df = pd.DataFrame([[1, 2, 3]], columns=["target", "target", "target"])
+    error = validate_dataframe(df)
+    assert error is not None
+    assert "['target']" in error
+
+
+def test_csv_upload_strips_column_whitespace():
+    raw = b"  actual  ,  predicted  \n1,2\n3,4\n"
+    frame, error = parse_uploaded_csv("data.csv", raw)
+    assert error is None
+    assert frame is not None
+    assert list(frame.columns) == ["actual", "predicted"]
+
+
+def test_csv_upload_detects_duplicate_with_whitespace():
+    raw = b"col, col \n1,2\n"
+    frame, error = parse_uploaded_csv("data.csv", raw)
+    assert frame is None
+    assert "Duplicate column names" in error
+
+
 def test_csv_upload_rejects_invalid_mime_type():
     frame, error = parse_uploaded_csv("rows.csv", b"a,b\n1,2\n", "application/json")
     assert frame is None
     assert "content type" in error
+
+
+@pytest.mark.parametrize(
+    "mime",
+    [
+        "text/csv",
+        "application/csv",
+        "application/vnd.ms-excel",
+        "text/plain",
+        "application/octet-stream",
+        "text/comma-separated-values",
+        "application/x-csv",
+        "text/x-csv",
+    ],
+)
+def test_csv_upload_accepts_standard_mime_types(mime):
+    frame, error = parse_uploaded_csv("rows.csv", b"a,b\n1,2\n", mime)
+    assert error is None
+    assert frame is not None
+    assert len(frame) == 1
+
+
+def test_csv_upload_rejects_empty_and_whitespace_bytes():
+    frame1, error1 = parse_uploaded_csv("empty.csv", b"")
+    assert frame1 is None
+    assert "empty" in error1.lower()
+
+    frame2, error2 = parse_uploaded_csv("spaces.csv", b"   \n\n  \t ")
+    assert frame2 is None
+    assert "empty" in error2.lower()
 
 
 def test_csv_upload_rejects_header_without_data_rows():
@@ -71,6 +123,17 @@ def test_binary_average_requires_positive_class():
         )
 
 
+def test_confusion_matrix_natural_numeric_label_ordering():
+    actual = pd.Series([0, 1, 2, 10])
+    predicted = pd.Series([0, 1, 2, 10])
+    _, matrix, _ = calculate_metrics(
+        "Classification", actual, predicted, ["Accuracy"]
+    )
+    assert matrix is not None
+    assert list(matrix.index) == [0, 1, 2, 10]
+    assert list(matrix.columns) == [0, 1, 2, 10]
+
+
 def test_regression_metrics_and_row_count():
     results, matrix, count = calculate_metrics(
         "Regression", pd.Series([1.0, 2.0]), pd.Series([1.5, 2.5]),
@@ -100,11 +163,33 @@ def test_run_records_completed_metadata_and_confusion_matrix():
     assert exported["run_id"] and exported["timestamp"]
 
 
+def test_evaluation_run_sanitizes_nan_results_for_json():
+    run = EvaluationRun("test.csv", "Regression", "actual", "predicted", ["R²"])
+    run.results = {"R²": float("nan"), "MSE": float("inf"), "MAE": 0.5}
+    data = run.to_dict()
+    assert data["results"]["R²"] is None
+    assert data["results"]["MSE"] is None
+    assert data["results"]["MAE"] == pytest.approx(0.5)
+
+
 def test_run_records_failed_status_with_safe_validation_error():
     run = EvaluationRun("sample.csv", "Classification", "actual", "predicted", ["Accuracy"])
     run.execute(pd.Series([1, 1]), pd.Series([1, 1]))
     assert run.status == "failed"
     assert "two distinct actual classes" in run.error_message
+
+
+def test_evaluation_run_resets_error_state_on_reexecution():
+    run = EvaluationRun("sample.csv", "Classification", "actual", "predicted", ["Accuracy"])
+    run.execute(pd.Series([1, 1]), pd.Series([1, 1]))
+    assert run.status == "failed"
+    assert run.error_message is not None
+
+    # Re-execute with valid multi-class series
+    run.execute(pd.Series([0, 1]), pd.Series([0, 1]))
+    assert run.status == "completed"
+    assert run.error_message is None
+    assert run.results["Accuracy"] == pytest.approx(1.0)
 
 
 def test_residual_summary_reports_mean_minimum_and_maximum_error():
@@ -114,6 +199,19 @@ def test_residual_summary_reports_mean_minimum_and_maximum_error():
     assert summary["Mean Error"] == pytest.approx(0.0)
     assert summary["Minimum Error"] == pytest.approx(-0.5)
     assert summary["Maximum Error"] == pytest.approx(1.0)
+    assert summary["Residual Standard Deviation"] > 0.0
+
+    single_summary = regression_residual_summary(
+        pd.Series([10.0]), pd.Series([12.0])
+    )
+    assert single_summary["Residual Standard Deviation"] == pytest.approx(0.0)
+
+
+def test_residual_summary_rejects_non_numeric_values():
+    with pytest.raises(ValueError, match="numeric actual and predicted"):
+        regression_residual_summary(
+            pd.Series(["one", "two"]), pd.Series([1.0, 2.0])
+        )
 
 
 def test_mismatched_sequence_lengths_raise_value_error():

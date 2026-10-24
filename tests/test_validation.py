@@ -11,54 +11,17 @@ from __future__ import annotations
 import io
 import pandas as pd
 
-
-# ---------------------------------------------------------------------------
-# Helpers — mirrors the validation logic extracted from app.py
-# ---------------------------------------------------------------------------
-
-MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
-
-
-def validate_file_size(file_size: int) -> str | None:
-    """Return an error message if the file is too large, else None."""
-    if file_size > MAX_FILE_SIZE:
-        return "File is too large. Maximum allowed size is 10 MB."
-    return None
+from evaluator.validators import (
+    MAX_FILE_SIZE,
+    parse_uploaded_csv,
+    validate_dataframe,
+    validate_file_size,
+)
 
 
 def parse_csv(raw: bytes) -> tuple[pd.DataFrame | None, str | None]:
-    """
-    Try to parse CSV bytes.
-    Returns (DataFrame, None) on success or (None, error_message) on failure.
-    """
-    try:
-        df = pd.read_csv(io.BytesIO(raw))
-        return df, None
-    except (pd.errors.ParserError, UnicodeDecodeError):
-        return None, "Invalid CSV format. Please upload a valid CSV."
-    except Exception:
-        return None, "Unable to read this file."
-
-
-def validate_dataframe(df: pd.DataFrame) -> str | None:
-    """
-    Validate structural requirements of the DataFrame.
-    Returns an error message string if invalid, else None.
-    """
-    if df.empty or len(df.columns) < 2:
-        return "Upload a non-empty CSV with at least two columns."
-
-    if df.columns.duplicated().any():
-        return "Duplicate column names found. Rename them and retry."
-
-    blank_columns = [
-        str(c) for c in df.columns
-        if not str(c).strip() or str(c).startswith("Unnamed:")
-    ]
-    if blank_columns:
-        return f"Blank or unnamed columns found: {blank_columns}"
-
-    return None
+    """Delegate to evaluator.validators.parse_uploaded_csv."""
+    return parse_uploaded_csv("upload.csv", raw)
 
 
 # ---------------------------------------------------------------------------

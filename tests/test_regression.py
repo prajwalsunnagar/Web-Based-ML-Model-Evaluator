@@ -10,63 +10,33 @@ from __future__ import annotations
 import pytest
 import pandas as pd
 import numpy as np
-from sklearn.metrics import (
-    mean_absolute_error,
-    mean_squared_error,
-    r2_score,
-)
+from evaluator.metrics import SUPPORTED_METRICS, calculate_metrics
 
-
-# ---------------------------------------------------------------------------
-# Helpers — mirrors the regression metric logic from app.py
-# ---------------------------------------------------------------------------
 
 def compute_regression_metrics(
     actual: pd.Series,
     predicted: pd.Series,
     selected_metrics: list[str],
 ) -> dict[str, float | None]:
-    """
-    Compute selected regression metrics.
-    Mirrors the logic inside app.py's regression branch.
-
-    Returns a dict; R² may be None when fewer than 2 valid rows exist.
-    Raises ValueError for non-numeric or non-finite inputs.
-    """
-    # Drop rows where either column is NaN.
-    valid = actual.notna() & predicted.notna()
-    actual = actual[valid]
-    predicted = predicted[valid]
-
-    if len(actual) == 0:
-        raise ValueError("No valid rows remain after removing missing values.")
-
-    actual_n = pd.to_numeric(actual, errors="raise")
-    predicted_n = pd.to_numeric(predicted, errors="raise")
-
-    if not (np.isfinite(actual_n).all() and np.isfinite(predicted_n).all()):
-        raise ValueError("Regression values must be finite numbers.")
-
-    results: dict[str, float | None] = {}
-
-    if "MAE" in selected_metrics:
-        results["MAE"] = mean_absolute_error(actual_n, predicted_n)
-
-    if "MSE" in selected_metrics:
-        results["MSE"] = mean_squared_error(actual_n, predicted_n)
-
-    if "RMSE" in selected_metrics:
-        results["RMSE"] = float(
-            np.sqrt(mean_squared_error(actual_n, predicted_n))
-        )
-
-    if "R\u00b2" in selected_metrics:
-        results["R\u00b2"] = (
-            r2_score(actual_n, predicted_n)
-            if len(actual_n) >= 2
-            else None
-        )
-
+    """Delegate to evaluator.metrics.calculate_metrics."""
+    valid_metrics = [m for m in selected_metrics if m in SUPPORTED_METRICS["Regression"]]
+    if not valid_metrics:
+        valid = actual.notna() & predicted.notna()
+        act = actual[valid]
+        pred = predicted[valid]
+        if len(act) == 0:
+            raise ValueError("No valid rows remain after removing missing values.")
+        act_n = pd.to_numeric(act, errors="raise")
+        pred_n = pd.to_numeric(pred, errors="raise")
+        if not (np.isfinite(act_n).all() and np.isfinite(pred_n).all()):
+            raise ValueError("Regression values must be finite numbers.")
+        return {}
+    results, _, _ = calculate_metrics(
+        "Regression",
+        actual,
+        predicted,
+        valid_metrics,
+    )
     return results
 
 

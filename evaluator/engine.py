@@ -1,6 +1,7 @@
 """Evaluation run lifecycle and safe result serialization."""
 from __future__ import annotations
 
+import math
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from uuid import uuid4
@@ -30,6 +31,11 @@ class EvaluationRun:
 
     def execute(self, actual: pd.Series, predicted: pd.Series) -> None:
         self.status = "running"
+        self.error_message = None
+        self.results = {}
+        self.confusion_matrix = None
+        self.confusion_labels = None
+        self.sample_count = 0
         try:
             self.results, matrix, self.sample_count = calculate_metrics(
                 self.task_type,
@@ -54,4 +60,12 @@ class EvaluationRun:
         result = asdict(self)
         if self.positive_label is not None:
             result["positive_label"] = str(self.positive_label)
+        if "results" in result and isinstance(result["results"], dict):
+            clean_results = {}
+            for k, v in result["results"].items():
+                if isinstance(v, float) and (math.isnan(v) or math.isinf(v)):
+                    clean_results[k] = None
+                else:
+                    clean_results[k] = v
+            result["results"] = clean_results
         return result
