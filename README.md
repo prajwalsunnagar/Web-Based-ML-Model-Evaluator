@@ -195,12 +195,12 @@ The application will launch and open in your browser at `http://localhost:8501`.
 ### 4. Upload and evaluate a dataset
 
 1. In the file uploader, upload a valid `.csv` file (e.g., `sample_data/classification_sample.csv` or `sample_data/regression_sample.csv`).
-2. Verify the instant upload feedback, file size guard (< 10 MB), and dataset summary preview.
+2. Verify the instant upload feedback, file size guard (< 10 MB), and dataset summary preview (rows, columns, missing values, complete rows).
 3. Select the evaluation task (**Classification** or **Regression**).
 4. Map the **Actual values column** (ground truth) and **Predicted values column** (model predictions).
 5. Select desired metrics (e.g., Accuracy, Precision, Recall, F1-score for classification; MAE, MSE, RMSE, R² for regression).
 6. Click **Calculate evaluation metrics** to execute the evaluation run.
-7. Inspect the generated KPI metric cards, detailed table, confusion matrix (classification) or residual error summary (regression), and session run history.
+7. Inspect the generated KPI metric cards, detailed table, confusion matrix with natural label ordering (classification) or residual error summary with residual standard deviation (regression), and session run history (with clear history capability).
 
 ---
 
@@ -218,15 +218,15 @@ python3 -m py_compile app.py evaluator/*.py tests/*.py
 
 ### Run the Automated Test Suite with Coverage
 ```bash
-pytest tests/ -v --tb=short --cov=evaluator --cov=. --cov-report=term-missing
+pytest tests/ -v --tb=short --cov=evaluator --cov=app --cov-report=term-missing
 ```
 
 Tests verify:
-- **File & Upload Validation (`test_validation.py`):** File format (.csv), MIME type validation, 10 MB size limits, empty file handling.
-- **Data Structure Validation (`test_validation.py`, `test_evaluator_modules.py`):** Column count ($\ge 2$), duplicate column detection, unnamed/blank header handling.
-- **Classification Engine (`test_classification.py`, `test_evaluator_modules.py`):** Binary and multiclass accuracy, precision, recall, F1-score with weighted/macro/micro averaging, confusion matrix.
-- **Regression Engine (`test_regression.py`, `test_evaluator_modules.py`):** MAE, MSE, RMSE, R² calculation, signed residual summaries, $N < 2$ edge cases.
-- **Robustness & Error Handling (`test_error_handling.py`):** Same column guard, non-numeric regression inputs, infinite values, single-class detection, sequence length matching, sanitized error messages without traceback leakage.
+- **File & Upload Validation (`test_validation.py`, `test_evaluator_modules.py`):** File format (.csv), standard MIME type validation (`text/csv`, `application/x-csv`, etc.), 10 MB size limits, empty and whitespace byte rejection, header whitespace stripping.
+- **Data Structure Validation (`test_validation.py`, `test_evaluator_modules.py`):** Column count ($\ge 2$), duplicate column detection and deduplicated reporting, unnamed/blank header handling.
+- **Classification Engine (`test_classification.py`, `test_evaluator_modules.py`):** Binary and multiclass accuracy, precision, recall, F1-score with weighted/macro/micro averaging, confusion matrix with natural numeric label sorting.
+- **Regression Engine (`test_regression.py`, `test_evaluator_modules.py`):** MAE, MSE, RMSE, R² calculation, signed residual summaries including sample standard deviation, $N < 2$ edge cases.
+- **Robustness & Error Handling (`test_error_handling.py`):** Same column guard, non-numeric regression inputs, infinite values, single-class detection, sequence length matching, sanitized error messages without traceback leakage, and safe JSON serialization of NaN values.
 - **End-to-End Verification (`test_evaluator_modules.py`):** Direct testing using committed sample datasets (`sample_data/classification_sample.csv` and `sample_data/regression_sample.csv`).
 - **Repeatability & Determinism (`test_evaluator_modules.py`):** Verified repeatable floating-point outputs across repeated runs within `1e-6`.
 
@@ -234,9 +234,9 @@ Tests verify:
 
 ## 11. CI/CD & Testing Status
 
-- **Automated Tests:** 92 automated tests passing with 100% pass rate.
-- **Evaluator Modules Coverage:** ~90% line coverage on core business logic (`evaluator/`).
-- **GitHub Actions Pipeline:** Configured in `.github/workflows/ci.yml` across Python 3.10, 3.11, and 3.12. Each workflow run executes:
+- **Automated Tests:** 113 automated tests passing with 100% pass rate.
+- **Evaluator Modules Coverage:** >90% line coverage on core business logic (`evaluator/`).
+- **GitHub Actions Pipeline:** Configured in `.github/workflows/ci.yml` across Python 3.10, 3.11, and 3.12 with concurrency controls. Each workflow run executes:
   1. Dependency installation (`requirements.txt` + `requirements-dev.txt`)
   2. Flake8 PEP 8 linting
   3. Python module compilation check
