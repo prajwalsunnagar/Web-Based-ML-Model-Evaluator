@@ -31,6 +31,11 @@ class EvaluationRun:
 
     def execute(self, actual: pd.Series, predicted: pd.Series) -> None:
         self.status = "running"
+        self.error_message = None
+        self.results = {}
+        self.confusion_matrix = None
+        self.confusion_labels = None
+        self.sample_count = 0
         try:
             self.results, matrix, self.sample_count = calculate_metrics(
                 self.task_type,

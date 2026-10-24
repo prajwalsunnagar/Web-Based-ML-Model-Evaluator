@@ -179,6 +179,19 @@ def test_run_records_failed_status_with_safe_validation_error():
     assert "two distinct actual classes" in run.error_message
 
 
+def test_evaluation_run_resets_error_state_on_reexecution():
+    run = EvaluationRun("sample.csv", "Classification", "actual", "predicted", ["Accuracy"])
+    run.execute(pd.Series([1, 1]), pd.Series([1, 1]))
+    assert run.status == "failed"
+    assert run.error_message is not None
+
+    # Re-execute with valid multi-class series
+    run.execute(pd.Series([0, 1]), pd.Series([0, 1]))
+    assert run.status == "completed"
+    assert run.error_message is None
+    assert run.results["Accuracy"] == pytest.approx(1.0)
+
+
 def test_residual_summary_reports_mean_minimum_and_maximum_error():
     summary = regression_residual_summary(
         pd.Series([1.0, 2.0, 3.0]), pd.Series([1.5, 2.5, 2.0])
