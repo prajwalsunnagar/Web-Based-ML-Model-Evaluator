@@ -98,8 +98,11 @@ def regression_residual_summary(
     if len(y_true) != len(y_pred):
         raise ValueError("Actual and predicted sequences must have the same length.")
     valid = y_true.notna() & y_pred.notna()
-    actual = pd.to_numeric(y_true[valid], errors="raise")
-    predicted = pd.to_numeric(y_pred[valid], errors="raise")
+    try:
+        actual = pd.to_numeric(y_true[valid], errors="raise")
+        predicted = pd.to_numeric(y_pred[valid], errors="raise")
+    except (ValueError, TypeError) as exc:
+        raise ValueError("Regression requires numeric actual and predicted values.") from exc
     if len(actual) == 0:
         raise ValueError("No valid rows remain after removing missing values.")
     if not (np.isfinite(actual).all() and np.isfinite(predicted).all()):

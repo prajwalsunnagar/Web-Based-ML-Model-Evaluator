@@ -179,6 +179,13 @@ def test_residual_summary_reports_mean_minimum_and_maximum_error():
     assert summary["Maximum Error"] == pytest.approx(1.0)
 
 
+def test_residual_summary_rejects_non_numeric_values():
+    with pytest.raises(ValueError, match="numeric actual and predicted"):
+        regression_residual_summary(
+            pd.Series(["one", "two"]), pd.Series([1.0, 2.0])
+        )
+
+
 def test_mismatched_sequence_lengths_raise_value_error():
     actual = pd.Series([1, 2, 3])
     predicted = pd.Series([1, 2])
