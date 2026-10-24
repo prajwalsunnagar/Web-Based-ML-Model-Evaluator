@@ -29,6 +29,9 @@ with st.sidebar:
                 f"{saved_run['status'].title()} · {saved_run['task_type']} · "
                 f"{saved_run['run_id'][:8]}"
             )
+        if st.button("Clear run history", type="secondary"):
+            st.session_state.run_history = []
+            st.rerun()
     else:
         st.caption("Completed and failed evaluations will appear here.")
 
@@ -44,10 +47,11 @@ if uploaded_file is not None:
     st.success("CSV uploaded and validated.")
     st.subheader("Dataset preview")
     st.dataframe(df.head(10), use_container_width=True)
-    c1, c2, c3 = st.columns(3)
+    c1, c2, c3, c4 = st.columns(4)
     c1.metric("Rows", len(df))
     c2.metric("Columns", len(df.columns))
     c3.metric("Missing values", int(df.isnull().sum().sum()))
+    c4.metric("Complete rows", int(df.dropna().shape[0]))
 
     st.subheader("Evaluation configuration")
     task_type = st.selectbox("Evaluation task", list(SUPPORTED_METRICS))

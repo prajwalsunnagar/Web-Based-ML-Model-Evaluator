@@ -12,7 +12,14 @@ ENV/
 # Testing & Coverage
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
 
 # Streamlit
 .streamlit/
+
+# OS and Editor
+.DS_Store
+*.swp
+*.swo
+*~

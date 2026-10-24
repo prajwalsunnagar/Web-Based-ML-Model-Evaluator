@@ -62,7 +62,11 @@ def calculate_metrics(
         if "F1-score" in selected_metrics:
             results["F1-score"] = float(f1_score(actual, predicted, **common))
 
-        labels = sorted(set(actual.unique()) | set(predicted.unique()), key=str)
+        unique_labels = set(actual.unique()) | set(predicted.unique())
+        try:
+            labels = sorted(unique_labels)
+        except TypeError:
+            labels = sorted(unique_labels, key=str)
         matrix = pd.DataFrame(
             confusion_matrix(actual, predicted, labels=labels),
             index=pd.Index(labels, name="Actual"),
@@ -94,15 +98,20 @@ def regression_residual_summary(
     if len(y_true) != len(y_pred):
         raise ValueError("Actual and predicted sequences must have the same length.")
     valid = y_true.notna() & y_pred.notna()
-    actual = pd.to_numeric(y_true[valid], errors="raise")
-    predicted = pd.to_numeric(y_pred[valid], errors="raise")
+    try:
+        actual = pd.to_numeric(y_true[valid], errors="raise")
+        predicted = pd.to_numeric(y_pred[valid], errors="raise")
+    except (ValueError, TypeError) as exc:
+        raise ValueError("Regression requires numeric actual and predicted values.") from exc
     if len(actual) == 0:
         raise ValueError("No valid rows remain after removing missing values.")
     if not (np.isfinite(actual).all() and np.isfinite(predicted).all()):
         raise ValueError("Regression values must be finite numbers.")
     residuals = actual - predicted
+    std_error = float(residuals.std(ddof=1)) if len(residuals) > 1 else 0.0
     return {
         "Mean Error": float(residuals.mean()),
+        "Residual Standard Deviation": std_error,
         "Minimum Error": float(residuals.min()),
         "Maximum Error": float(residuals.max()),
         "Mean Absolute Error": float(residuals.abs().mean()),

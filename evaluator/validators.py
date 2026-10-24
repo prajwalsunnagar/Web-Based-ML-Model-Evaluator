@@ -19,7 +19,8 @@ def validate_file_size(file_size: int) -> str | None:
 def _duplicates(header: list[str]) -> list[str]:
     seen: set[str] = set()
     duplicates: list[str] = []
-    for name in header:
+    for raw_name in header:
+        name = str(raw_name).strip()
         if name in seen and name not in duplicates:
             duplicates.append(name)
         seen.add(name)
@@ -35,12 +36,15 @@ def parse_uploaded_csv(
     accepted_types = {
         "text/csv", "application/csv", "application/vnd.ms-excel",
         "text/plain", "application/octet-stream",
+        "text/comma-separated-values", "application/x-csv", "text/x-csv",
     }
     if mime_type and mime_type.lower() not in accepted_types:
         return None, "Unsupported file content type. Please upload a CSV file."
     size_error = validate_file_size(len(raw))
     if size_error:
         return None, size_error
+    if not raw or not raw.strip():
+        return None, "Uploaded file is empty. Please upload a CSV with data."
 
     try:
         text = raw.decode("utf-8-sig")
@@ -49,6 +53,7 @@ def parse_uploaded_csv(
         if duplicates:
             return None, f"Duplicate column names found: {duplicates}. Rename them and retry."
         df = pd.read_csv(io.BytesIO(raw))
+        df.columns = [str(c).strip() for c in df.columns]
     except (pd.errors.ParserError, pd.errors.EmptyDataError, UnicodeDecodeError, csv.Error):
         return None, "Invalid CSV format. Please upload a valid CSV."
     except Exception:
@@ -64,7 +69,7 @@ def validate_dataframe(df: pd.DataFrame) -> str | None:
     if df.empty or len(df.columns) < 2:
         return "Upload a non-empty CSV with at least two columns."
     if df.columns.duplicated().any():
-        duplicates = [str(name) for name in df.columns[df.columns.duplicated()]]
+        duplicates = list(dict.fromkeys(str(name) for name in df.columns[df.columns.duplicated()]))
         return f"Duplicate column names found: {duplicates}. Rename them and retry."
     blank = [
         str(name) for name in df.columns

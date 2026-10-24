@@ -9,61 +9,31 @@ from __future__ import annotations
 
 import pytest
 import pandas as pd
-from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-)
+from evaluator.metrics import SUPPORTED_METRICS, calculate_metrics
 
-
-# ---------------------------------------------------------------------------
-# Helpers — mirrors the metric computation logic from app.py
-# ---------------------------------------------------------------------------
 
 def compute_classification_metrics(
     actual: pd.Series,
     predicted: pd.Series,
     selected_metrics: list[str],
 ) -> dict[str, float]:
-    """
-    Compute selected classification metrics.
-    Mirrors the logic inside app.py's classification branch.
-    """
-    # Drop rows where either column is NaN.
-    valid = actual.notna() & predicted.notna()
-    actual = actual[valid]
-    predicted = predicted[valid]
-
-    if len(actual) == 0:
-        raise ValueError("No valid rows remain after removing missing values.")
-
-    if actual.nunique() < 2:
-        raise ValueError(
-            "Classification evaluation requires at least "
-            "two distinct actual classes."
-        )
-
-    results: dict[str, float] = {}
-
-    if "Accuracy" in selected_metrics:
-        results["Accuracy"] = accuracy_score(actual, predicted)
-
-    if "Precision" in selected_metrics:
-        results["Precision"] = precision_score(
-            actual, predicted, average="weighted", zero_division=0
-        )
-
-    if "Recall" in selected_metrics:
-        results["Recall"] = recall_score(
-            actual, predicted, average="weighted", zero_division=0
-        )
-
-    if "F1-score" in selected_metrics:
-        results["F1-score"] = f1_score(
-            actual, predicted, average="weighted", zero_division=0
-        )
-
+    """Delegate to evaluator.metrics.calculate_metrics."""
+    valid_metrics = [m for m in selected_metrics if m in SUPPORTED_METRICS["Classification"]]
+    if not valid_metrics:
+        valid = actual.notna() & predicted.notna()
+        act = actual[valid]
+        if len(act) == 0:
+            raise ValueError("No valid rows remain after removing missing values.")
+        if act.nunique() < 2:
+            raise ValueError("Classification evaluation requires at least two distinct actual classes.")
+        return {}
+    results, _, _ = calculate_metrics(
+        "Classification",
+        actual,
+        predicted,
+        valid_metrics,
+        average="weighted",
+    )
     return results
 
 
