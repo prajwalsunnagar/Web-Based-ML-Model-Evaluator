@@ -29,6 +29,21 @@ def test_validate_dataframe_deduplicates_repeated_column_names():
     assert "['target']" in error
 
 
+def test_csv_upload_strips_column_whitespace():
+    raw = b"  actual  ,  predicted  \n1,2\n3,4\n"
+    frame, error = parse_uploaded_csv("data.csv", raw)
+    assert error is None
+    assert frame is not None
+    assert list(frame.columns) == ["actual", "predicted"]
+
+
+def test_csv_upload_detects_duplicate_with_whitespace():
+    raw = b"col, col \n1,2\n"
+    frame, error = parse_uploaded_csv("data.csv", raw)
+    assert frame is None
+    assert "Duplicate column names" in error
+
+
 def test_csv_upload_rejects_invalid_mime_type():
     frame, error = parse_uploaded_csv("rows.csv", b"a,b\n1,2\n", "application/json")
     assert frame is None

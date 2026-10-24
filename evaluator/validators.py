@@ -19,7 +19,8 @@ def validate_file_size(file_size: int) -> str | None:
 def _duplicates(header: list[str]) -> list[str]:
     seen: set[str] = set()
     duplicates: list[str] = []
-    for name in header:
+    for raw_name in header:
+        name = str(raw_name).strip()
         if name in seen and name not in duplicates:
             duplicates.append(name)
         seen.add(name)
@@ -52,6 +53,7 @@ def parse_uploaded_csv(
         if duplicates:
             return None, f"Duplicate column names found: {duplicates}. Rename them and retry."
         df = pd.read_csv(io.BytesIO(raw))
+        df.columns = [str(c).strip() for c in df.columns]
     except (pd.errors.ParserError, pd.errors.EmptyDataError, UnicodeDecodeError, csv.Error):
         return None, "Invalid CSV format. Please upload a valid CSV."
     except Exception:
