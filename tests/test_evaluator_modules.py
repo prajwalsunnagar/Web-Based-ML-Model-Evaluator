@@ -6,7 +6,7 @@ import pytest
 
 from evaluator.engine import EvaluationRun
 from evaluator.metrics import calculate_metrics, regression_residual_summary
-from evaluator.validators import MAX_FILE_SIZE, parse_uploaded_csv
+from evaluator.validators import MAX_FILE_SIZE, parse_uploaded_csv, validate_dataframe
 
 
 def test_upload_validation_rejects_type_and_size_before_parsing():
@@ -20,6 +20,13 @@ def test_duplicate_header_message_names_duplicate():
     frame, error = parse_uploaded_csv("rows.csv", b"actual,predicted,actual\n1,1,1\n")
     assert frame is None
     assert "actual" in error
+
+
+def test_validate_dataframe_deduplicates_repeated_column_names():
+    df = pd.DataFrame([[1, 2, 3]], columns=["target", "target", "target"])
+    error = validate_dataframe(df)
+    assert error is not None
+    assert "['target']" in error
 
 
 def test_csv_upload_rejects_invalid_mime_type():

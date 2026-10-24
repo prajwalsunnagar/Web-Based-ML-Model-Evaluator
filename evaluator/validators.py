@@ -67,7 +67,7 @@ def validate_dataframe(df: pd.DataFrame) -> str | None:
     if df.empty or len(df.columns) < 2:
         return "Upload a non-empty CSV with at least two columns."
     if df.columns.duplicated().any():
-        duplicates = [str(name) for name in df.columns[df.columns.duplicated()]]
+        duplicates = list(dict.fromkeys(str(name) for name in df.columns[df.columns.duplicated()]))
         return f"Duplicate column names found: {duplicates}. Rename them and retry."
     blank = [
         str(name) for name in df.columns
