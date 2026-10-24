@@ -163,6 +163,15 @@ def test_run_records_completed_metadata_and_confusion_matrix():
     assert exported["run_id"] and exported["timestamp"]
 
 
+def test_evaluation_run_sanitizes_nan_results_for_json():
+    run = EvaluationRun("test.csv", "Regression", "actual", "predicted", ["R²"])
+    run.results = {"R²": float("nan"), "MSE": float("inf"), "MAE": 0.5}
+    data = run.to_dict()
+    assert data["results"]["R²"] is None
+    assert data["results"]["MSE"] is None
+    assert data["results"]["MAE"] == pytest.approx(0.5)
+
+
 def test_run_records_failed_status_with_safe_validation_error():
     run = EvaluationRun("sample.csv", "Classification", "actual", "predicted", ["Accuracy"])
     run.execute(pd.Series([1, 1]), pd.Series([1, 1]))
