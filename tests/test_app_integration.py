@@ -1,12 +1,16 @@
 """Integration tests for the Streamlit application interface."""
 from __future__ import annotations
 
+from pathlib import Path
+
 from streamlit.testing.v1 import AppTest
+
+APP_PATH = str(Path(__file__).resolve().parent.parent / "app.py")
 
 
 def test_app_initial_render():
     """Verify that the application launches cleanly with headers and empty history."""
-    at = AppTest.from_file("app.py")
+    at = AppTest.from_file(APP_PATH)
     at.run()
     assert len(at.title) == 1
     assert "Web-Based ML Model Evaluator" in at.title[0].value
@@ -17,7 +21,7 @@ def test_app_initial_render():
 
 def test_app_session_history_completed_run_render():
     """Verify that completed evaluation runs appear in sidebar and history table."""
-    at = AppTest.from_file("app.py")
+    at = AppTest.from_file(APP_PATH)
     at.session_state["run_history"] = [
         {
             "run_id": "test-run-12345678",
@@ -43,7 +47,7 @@ def test_app_session_history_completed_run_render():
 
 def test_app_session_history_failed_run_render():
     """Verify that failed runs are retained in history with error details."""
-    at = AppTest.from_file("app.py")
+    at = AppTest.from_file(APP_PATH)
     at.session_state["run_history"] = [
         {
             "run_id": "failed-run-99999999",
@@ -68,7 +72,7 @@ def test_app_session_history_failed_run_render():
 
 def test_app_clear_history_action():
     """Verify that clicking clear run history empties session state."""
-    at = AppTest.from_file("app.py")
+    at = AppTest.from_file(APP_PATH)
     at.session_state["run_history"] = [
         {
             "run_id": "run-to-clear",
