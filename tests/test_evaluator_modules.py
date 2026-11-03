@@ -290,3 +290,108 @@ def test_safe_error_response_no_traceback_leakage():
     assert run.error_message is not None
     assert "Traceback" not in run.error_message
     assert "/" not in run.error_message
+
+
+def test_evaluation_run_lifecycle_pending_to_running_to_completed():
+    run = EvaluationRun("test.csv", "Classification", "actual", "predicted", ["Accuracy"])
+    assert run.status == "pending"
+
+    observed_status_during_run = []
+
+    def mock_calc(*args, **kwargs):
+        observed_status_during_run.append(run.status)
+        return {"Accuracy": 1.0}, None, 2
+
+    import evaluator.engine as eng
+    original_calc = eng.calculate_metrics
+    eng.calculate_metrics = mock_calc
+    try:
+        run.execute(pd.Series([0, 1]), pd.Series([0, 1]))
+    finally:
+        eng.calculate_metrics = original_calc
+
+    assert observed_status_during_run == ["running"]
+    assert run.status == "completed"
+
+
+def test_evaluation_run_to_metrics_dataframe():
+    run = EvaluationRun("test.csv", "Regression", "actual", "predicted", ["MAE", "MSE"])
+    run.results = {"MAE": 0.5, "MSE": 0.25}
+    df = run.to_metrics_dataframe()
+    assert list(df.columns) == ["Metric", "Value"]
+    assert len(df) == 2
+    assert set(df["Metric"]) == {"MAE", "MSE"}
+
+
+def test_json_export_round_trip():
+    import json
+    run = EvaluationRun("test.csv", "Regression", "actual", "predicted", ["MAE", "R²"])
+    run.execute(pd.Series([1.0, 2.0]), pd.Series([1.1, 1.9]))
+    data = run.to_dict()
+    serialized = json.dumps(data, indent=2, ensure_ascii=False, allow_nan=False)
+    deserialized = json.loads(serialized)
+    assert deserialized["run_id"] == run.run_id
+    assert deserialized["status"] == "completed"
+    assert "MAE" in deserialized["results"]
+
+
+def test_classification_repeatability_and_determinism():
+    actual = pd.Series(["A", "B", "A", "B", "C", "C"])
+    predicted = pd.Series(["A", "A", "A", "B", "C", "B"])
+    first_res, _, _ = calculate_metrics(
+        "Classification", actual, predicted,
+        ["Accuracy", "Precision", "Recall", "F1-score"],
+        average="weighted",
+    )
+    for _ in range(5):
+        repeat_res, _, _ = calculate_metrics(
+            "Classification", actual, predicted,
+            ["Accuracy", "Precision", "Recall", "F1-score"],
+            average="weighted",
+        )
+        for k in first_res:
+            assert abs(first_res[k] - repeat_res[k]) < 1e-6
+
+
+def test_classification_infinite_values_rejected():
+    import numpy as np
+    actual = pd.Series([1.0, np.inf, 2.0])
+    predicted = pd.Series([1.0, 2.0, 2.0])
+    with pytest.raises(ValueError, match="infinite values"):
+        calculate_metrics("Classification", actual, predicted, ["Accuracy"])
+
+
+def test_performance_standard_datasets():
+    import time
+    import numpy as np
+    y_true_reg = pd.Series(np.linspace(0, 100, 1000))
+    y_pred_reg = y_true_reg + 0.5
+    start = time.perf_counter()
+    res_reg, _, count_reg = calculate_metrics("Regression", y_true_reg, y_pred_reg, ["MAE", "MSE", "RMSE", "R²"])
+    duration_reg = time.perf_counter() - start
+    assert duration_reg < 1.0
+    assert count_reg == 1000
+
+    y_true_clf = pd.Series(np.tile(["class_0", "class_1", "class_2"], 334)[:1000])
+    y_pred_clf = pd.Series(np.tile(["class_0", "class_1", "class_1"], 334)[:1000])
+    start = time.perf_counter()
+    res_clf, _, count_clf = calculate_metrics(
+        "Classification", y_true_clf, y_pred_clf,
+        ["Accuracy", "Precision", "Recall", "F1-score"],
+        average="weighted",
+    )
+    duration_clf = time.perf_counter() - start
+    assert duration_clf < 1.0
+    assert count_clf == 1000
+
+
+def test_performance_10k_rows():
+    import time
+    import numpy as np
+    y_true = pd.Series(np.random.randn(10000))
+    y_pred = y_true + 0.1
+    start = time.perf_counter()
+    _, _, count = calculate_metrics("Regression", y_true, y_pred, ["MAE", "MSE", "RMSE", "R²"])
+    duration = time.perf_counter() - start
+    assert duration < 1.0
+    assert count == 10000
