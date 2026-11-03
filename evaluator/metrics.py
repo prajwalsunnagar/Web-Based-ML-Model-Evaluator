@@ -40,6 +40,17 @@ def calculate_metrics(
     results: dict[str, float | None] = {}
     matrix = None
     if task_type == "Classification":
+        # Guard against infinite values in classification inputs
+        try:
+            act_num = pd.to_numeric(actual, errors="coerce")
+            pred_num = pd.to_numeric(predicted, errors="coerce")
+            if np.isinf(act_num).any() or np.isinf(pred_num).any():
+                raise ValueError("Classification values must not contain infinite values.")
+        except ValueError:
+            raise
+        except Exception:
+            pass
+
         if actual.nunique() < 2:
             raise ValueError("Classification evaluation requires at least two distinct actual classes.")
         if average not in CLASSIFICATION_AVERAGES:
