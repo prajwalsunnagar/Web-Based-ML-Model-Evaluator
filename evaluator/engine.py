@@ -50,11 +50,23 @@ class EvaluationRun:
                 self.confusion_matrix = matrix.values.tolist()
             self.status = "completed"
         except (ValueError, TypeError) as exc:
-            self.error_message = str(exc)
+            msg = str(exc)
+            if "/" in msg or "\\" in msg or "Traceback" in msg:
+                self.error_message = (
+                    "Evaluation failed due to invalid data format. "
+                    "Check the selected columns and input values."
+                )
+            else:
+                self.error_message = msg
             self.status = "failed"
         except Exception:
             self.error_message = "Evaluation failed. Check the selected columns and input values."
             self.status = "failed"
+
+    def to_metrics_dataframe(self) -> pd.DataFrame:
+        """Return computed results as a structured DataFrame."""
+        rows = [{"Metric": k, "Value": v} for k, v in self.results.items()]
+        return pd.DataFrame(rows) if rows else pd.DataFrame(columns=["Metric", "Value"])
 
     def to_dict(self) -> dict:
         result = asdict(self)
