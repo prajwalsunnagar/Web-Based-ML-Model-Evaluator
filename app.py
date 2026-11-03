@@ -105,9 +105,7 @@ if uploaded_file is not None:
             for col, (name, value) in zip(metric_cols, run.results.items()):
                 col.metric(name, "N/A" if value is None else f"{value:.4f}")
             st.caption(f"Evaluated {run.sample_count} valid row(s).")
-            result_table = pd.DataFrame(
-                [{"Metric": name, "Value": value} for name, value in run.results.items()]
-            )
+            result_table = run.to_metrics_dataframe()
             st.dataframe(result_table, hide_index=True, use_container_width=True)
 
             if task_type == "Classification" and run.confusion_matrix is not None:
@@ -138,19 +136,33 @@ if st.session_state.run_history:
             "Averaging": item["average"],
         }
         row.update(item["results"])
-        if item["error_message"]:
+        if item.get("error_message"):
             row["Error"] = item["error_message"]
         history_rows.append(row)
     st.dataframe(pd.DataFrame(history_rows), hide_index=True, use_container_width=True)
 
     latest = st.session_state.run_history[0]
-    st.download_button(
+    dl_col1, dl_col2, dl_col3 = st.columns(3)
+    dl_col1.download_button(
         "Download latest run (JSON)",
         data=json.dumps(latest, indent=2, ensure_ascii=False, allow_nan=False),
         file_name=f"evaluation-{latest['run_id']}.json",
         mime="application/json",
     )
-    st.download_button(
-        "Download run history (CSV)", data=pd.DataFrame(history_rows).to_csv(index=False),
-        file_name="evaluation-history.csv", mime="text/csv",
+    if latest.get("results"):
+        summary_rows = [
+            {"Metric": k, "Value": "N/A" if v is None else f"{v:.4f}"}
+            for k, v in latest["results"].items()
+        ]
+        dl_col2.download_button(
+            "Download metrics summary (CSV)",
+            data=pd.DataFrame(summary_rows).to_csv(index=False),
+            file_name=f"metrics_summary_{latest['run_id'][:8]}.csv",
+            mime="text/csv",
+        )
+    dl_col3.download_button(
+        "Download run history (CSV)",
+        data=pd.DataFrame(history_rows).to_csv(index=False),
+        file_name="evaluation-history.csv",
+        mime="text/csv",
     )

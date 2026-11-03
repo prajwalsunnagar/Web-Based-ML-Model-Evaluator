@@ -12,20 +12,24 @@ The implemented application strictly follows the modular design specified in **S
 
 1. **Upload Handler & Schema Validator (`evaluator/validators.py`):**
    - Implements `validate_file_size` and `validate_file_type` before heavy file processing.
-   - Enforces unique header columns, non-empty data rows, and non-empty target/prediction sequences.
+   - Enforces standard CSV MIME type matching, unique header columns, non-empty data rows, and non-empty target/prediction sequences.
 
 2. **Configuration Validator & Metric Engine (`evaluator/metrics.py`):**
-   - Implements the testable contract: `calculate_metrics(task_type, y_true, y_pred, selected_metrics, average)`.
+   - Implements the testable contract: `calculate_metrics(task_type, y_true, y_pred, selected_metrics, average, positive_label)`.
    - Adheres to `BR-01` through `BR-05`: verifies task/metric compatibility, enforces deterministic float computations, and isolates metric calculation logic from presentation components (NFR-09).
+   - Generates confusion matrix with natural numeric/string label ordering.
+   - Computes signed regression residual statistics including residual standard deviation.
 
 3. **Evaluation Service & Orchestrator (`evaluator/engine.py`):**
    - Manages the lifecycle of an `EvaluationRun` (`pending` -> `running` -> `completed` / `failed`).
-   - Links run results with an immutable `run_id`, timestamp, source file name, target column, prediction column, and sample count (`FR-14`).
-   - Sanitizes errors so that internal server stack traces are not leaked to users (`NFR-02`, `SEC-06`).
+   - Resets run error state upon subsequent executions.
+   - Links run results with an immutable `run_id`, timestamp, source file name, target column, prediction column, sample count, and averaging method (`FR-14`).
+   - Sanitizes errors so that internal server stack traces and raw file paths are never leaked to users (`NFR-02`, `SEC-06`).
+   - Sanitizes NaN and infinite metric outputs to `None` for compliant JSON serialization.
 
 4. **Result Presenter (`app.py`):**
    - Provides a clean, responsive web interface built using Streamlit.
-   - Renders metric cards, summary tables, confusion matrix (classification), residual metrics (regression), and JSON/CSV report downloads (`FR-08`, `FR-13`).
+   - Renders metric KPI cards, summary tables, confusion matrix (classification), residual error metrics (regression), session run history, and JSON/CSV report downloads (`FR-08`, `FR-11`, `FR-13`).
 
 ---
 
@@ -41,6 +45,8 @@ The implemented application strictly follows the modular design specified in **S
 
 ## 3. Development Freeze Declaration
 
-- **Freeze Date:** 30 October 2026 (Ready for submission review as of 12 October 2026)
-- **Status:** All Sprint 1 and Sprint 2 features implemented, verified with automated unit tests, and documented.
-- **Repository Baseline Commit:** Head of `main`.
+- **Freeze Date:** 30 October 2026
+- **Status:** Development officially frozen for Part-2 submission.
+- **Scope Verified:** All Sprint 1 (Issues #1 to #6) and Sprint 2 (Issues #7 to #10) features fully implemented and verified against the Definition of Done.
+- **Verification Evidence:** 124 automated unit and integration tests passing with 100% pass rate in 1.48 seconds; PEP 8 compliant with zero flake8 warnings; bytecode compilation verified; GitHub Actions CI configured with multi-version matrix (Python 3.10, 3.11, 3.12).
+- **Target Tag:** `v1.0.0-part2-freeze` on merge to `main`.

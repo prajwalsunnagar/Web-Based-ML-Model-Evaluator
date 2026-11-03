@@ -12,7 +12,6 @@ ENV/
 # Testing & Coverage
 .pytest_cache/
 .coverage
-.coverage.*
 htmlcov/
 
 # Streamlit
@@ -23,3 +22,8 @@ htmlcov/
 *.swp
 *.swo
 *~
+
+# Media / demo videos
+docs/demo_videos/*.mp4
+docs/demo_videos/*.mov
+!docs/demo_videos/.gitkeep
