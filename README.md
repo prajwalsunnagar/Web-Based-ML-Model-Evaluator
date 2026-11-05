@@ -108,38 +108,46 @@ Web-Based-ML-Model-Evaluator/
 
 ---
 
-## 6. Project Documentation
+## 6. Project Documentation & Academic Deliverables
 
-### Software Requirements Specification
-The SRS documents system requirements, project scope, functional requirements (`FR-01` to `FR-14`), non-functional requirements (`NFR-01` to `NFR-12`), constraints, and business rules.
-- [View SRS](docs/SRS.docx)
+### Comprehensive Repository Audit
+- [View Final Repository Audit](docs/FINAL_REPOSITORY_AUDIT.md) — Comprehensive audit matrix across all Part 1 and Part 2 deliverables.
 
-### Architecture and Design
-The Architecture and Design document describes the proposed layered web architecture, major components, system interactions, data flow, and design decisions.
-- [View Architecture Design](docs/Architecture-Design.docx)
+### Software Requirements Specification (SRS)
+The SRS documents system requirements, project scope, functional requirements (`FR-01` to `FR-14`), non-functional requirements (`NFR-01` to `NFR-12`), security objectives (`SO-01` to `SO-04`), security requirements (`SEC-01` to `SEC-08`), and UML use case model adhering to IEEE Std 830-1998.
+- [View Revised SRS (DOCX)](docs/SRS-REVISED.docx) | [View Revised SRS (Markdown)](docs/SRS-REVISED.md)
+- [Original Baseline SRS (DOCX)](docs/SRS.docx)
 
-### Test Plan & Test Execution Report
-The Test Plan defines the testing approach, test objectives, scenarios, test cases (TC-01 through TC-10), and expected results. The Test Execution Report documents verified execution evidence and the Requirement Traceability Matrix (RTM).
-- [View Test Plan](docs/Test-Plan.docx)
-- [View Test Execution Report & Traceability Matrix](docs/TEST-EXECUTION-REPORT.md)
+### Software Architecture and Design (SAD)
+The Architecture and Design document details the 3-tier modular reactive architecture, component decomposition, four Mermaid sequence and architecture diagrams, security boundaries, and design decisions adhering to IEEE Std 1016-2009.
+- [View Revised SAD (DOCX)](docs/Architecture-Design-REVISED.docx) | [View Revised SAD (Markdown)](docs/Architecture-Design-REVISED.md)
+- [Original Baseline SAD (DOCX)](docs/Architecture-Design.docx)
+
+### Software Test Plan (STP) & Requirement Traceability Matrix (RTM)
+The Test Plan defines the test scope, strategy, test levels, 14 formal test cases (TC-01 through TC-14), 9 security validations (SV-01 through SV-09), and verified execution evidence adhering to IEEE Std 829-2008.
+- [View Revised Test Plan (DOCX)](docs/Test-Plan-REVISED.docx) | [View Revised Test Plan (Markdown)](docs/Test-Plan-REVISED.md)
+- [View Requirement Traceability Matrix (RTM)](docs/REQUIREMENT-TRACEABILITY-MATRIX.md)
+- [View Test Execution Report](docs/TEST-EXECUTION-REPORT.md)
+- [Original Baseline Test Plan (DOCX)](docs/Test-Plan.docx)
 
 ### Agile Sprint Plan & Backlog
-The Sprint Plan defines the delivery milestones, Fibonacci story point scale, team allocations, Definition of Done, demonstration requirements, and detailed user stories for all 10 GitHub backlog issues across Sprint 1 and Sprint 2.
+The Sprint Plan defines the delivery milestones, Fibonacci story point scale (40 SP total across Sprint 1 & 2), Definition of Done, user stories for Issues #1 to #10, and GitHub Project Board setup instructions.
 - [View Sprint Plan](docs/SPRINT-PLAN.md)
-
-### Part 2 Deliverables Audit & Traceability
-The Deliverables Audit details the complete verification checklist across all Part-2 requirements, remote vs. local analysis, GitHub project setup instructions, and milestone deliverables.
 - [View Part-2 Deliverable Audit](docs/PART2_DELIVERABLE_AUDIT.md)
 
-### Architectural Alignment & Deviations
-Documents the alignment of the implementation with SAD Section 4.1/4.2, single-tenant local scoping, and the formal development freeze declaration.
+### Architectural Alignment & Formal Deviations
+Documents the alignment of the implementation with SAD Section 4.1/4.2, 8-point engineering analysis for deviations, and the formal development freeze declaration.
 - [View Deviations & Architecture Notes](docs/DEVIATIONS-AND-NOTES.md)
 
-### Demonstration Checklists & Video Scripts
-Provides 60-second (Sprint 1) and 120-second (Sprint 2) timestamped walkthrough outlines, pre-demo setup steps, video upload guidelines, and narration scripts.
-- [View Demo Checklists](docs/DEMO_CHECKLIST.md)
-- [View Sprint 1 Demo Narration Script](docs/demo/sprint-1-narration-script.md)
-- [View Sprint 2 Demo Narration Script](docs/demo/sprint-2-narration-script.md)
+### Demonstration Guides & Narration Scripts
+Provides 60-second (Sprint 1) and 120-second (Sprint 2) timestamped narration scripts, visual screen action tables, and video recording checklists.
+- [View Sprint 1 Recording Guide](docs/demo/SPRINT-1-RECORDING-GUIDE.md)
+- [View Sprint 2 Recording Guide](docs/demo/SPRINT-2-RECORDING-GUIDE.md)
+- [View Demo Checklists & Video Status](docs/DEMO_CHECKLIST.md)
+- [View Demo Videos Directory](docs/demo_videos/)
+
+### Final Submission Checklist
+- [View Final Submission Checklist](docs/FINAL_SUBMISSION_CHECKLIST.md)
 
 ---
 

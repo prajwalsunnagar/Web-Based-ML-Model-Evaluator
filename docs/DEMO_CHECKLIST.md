@@ -12,7 +12,7 @@
 - **Scheduled Window:** 19 October – 23 October 2026.
 - **Recording Video Status:** `PENDING RECORDING`
 - **Goal:** Demonstrate the working core evaluation flow: CSV upload, schema/column validation, metric selection, calculation, and KPI cards.
-- **Narration Script:** [`docs/demo/sprint-1-narration-script.md`](demo/sprint-1-narration-script.md)
+- **Narration Script & Guide:** [`docs/demo/SPRINT-1-RECORDING-GUIDE.md`](demo/SPRINT-1-RECORDING-GUIDE.md)
 
 ### Pre-Demo Setup & Environment Checklist
 - [x] Python 3.10+ active environment with dependencies installed (`pip install -r requirements.txt`).
@@ -39,7 +39,7 @@
 - **Scheduled Window:** 26 October – 30 October 2026.
 - **Recording Video Status:** `PENDING RECORDING`
 - **Goal:** Demonstrate completed working product, regression evaluation, error handling & robustness, run history, report export, CI automation, and development freeze.
-- **Narration Script:** [`docs/demo/sprint-2-narration-script.md`](demo/sprint-2-narration-script.md)
+- **Narration Script & Guide:** [`docs/demo/SPRINT-2-RECORDING-GUIDE.md`](demo/SPRINT-2-RECORDING-GUIDE.md)
 
 ### Pre-Demo Setup & Environment Checklist
 - [x] Dependencies installed (`pip install -r requirements.txt -r requirements-dev.txt`).
