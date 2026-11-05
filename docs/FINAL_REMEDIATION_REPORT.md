@@ -129,6 +129,11 @@ TOTAL                       302     72    76%
 | Revised SRS (DOCX & MD) | `docs/SRS-REVISED.docx`, `docs/SRS-REVISED.md` | **COMPLETE** |
 | Revised SAD (DOCX & MD) | `docs/Architecture-Design-REVISED.docx`, `docs/Architecture-Design-REVISED.md` | **COMPLETE** |
 | Revised STP (DOCX & MD) | `docs/Test-Plan-REVISED.docx`, `docs/Test-Plan-REVISED.md` | **COMPLETE** |
+| Formal Test Case Document | `docs/TEST-CASE-DOCUMENT.md` | **COMPLETE** |
+| Unit Test Report | `docs/UNIT-TEST-REPORT.md` | **COMPLETE** |
+| System Validation Report | `docs/SYSTEM-VALIDATION-REPORT.md` | **COMPLETE** |
+| Code Coverage Report | `docs/CODE-COVERAGE-REPORT.md`, `htmlcov/` | **COMPLETE** |
+| Branch Coverage Report | `docs/BRANCH-COVERAGE-REPORT.md` | **COMPLETE** |
 | Requirement Traceability Matrix | `docs/REQUIREMENT-TRACEABILITY-MATRIX.md` | **COMPLETE** |
 | Test Execution Report | `docs/TEST-EXECUTION-REPORT.md` | **COMPLETE** |
 | Backlog & Sprint Plan | `docs/SPRINT-PLAN.md` (40 SP reconciled) | **COMPLETE** |
@@ -140,8 +145,8 @@ TOTAL                       302     72    76%
 | Final Submission Checklist | `docs/FINAL_SUBMISSION_CHECKLIST.md` | **COMPLETE** |
 | Working Application & Tests | `app.py`, `evaluator/`, `tests/` (124 tests) | **COMPLETE** |
 | CI Multi-Version Matrix | `.github/workflows/ci.yml` | **COMPLETE** |
-| Sprint 1 & 2 Video Files | `docs/demo_videos/sprint1_demo.mp4`, `sprint2_demo.mp4` | **NEEDS MANUAL ACTION** |
-| GitHub Projects v2 Board | User-level GitHub Projects board | **NEEDS MANUAL ACTION** |
+| Sprint 1 & 2 Video Files | `docs/demo_videos/sprint1_demo.mp4`, `sprint2_demo.mp4` | **PENDING MANUAL ACTION** |
+| GitHub Projects v2 Board | User-level GitHub Projects board | **PENDING MANUAL ACTION** |
 
 ---
 
@@ -150,7 +155,6 @@ TOTAL                       302     72    76%
 1. **Record Sprint 1 Video (1 minute):** Follow `docs/demo/SPRINT-1-RECORDING-GUIDE.md`. Export to `docs/demo_videos/sprint1_demo.mp4`.
 2. **Record Sprint 2 Video (2 minutes):** Follow `docs/demo/SPRINT-2-RECORDING-GUIDE.md`. Export to `docs/demo_videos/sprint2_demo.mp4`.
 3. **Link GitHub Project Board:** Follow Section 7 of `docs/SPRINT-PLAN.md` in browser.
-4. **Merge Pull Request #16:** Merge `feature/sprint-2-completion` into `main` after video attachments are finalized.
 
 ---
 
@@ -159,5 +163,5 @@ TOTAL                       302     72    76%
 The Web-Based ML Model Evaluator project is **OFFICIALLY READY FOR FINAL SUBMISSION**.
 
 - **Signed:** Project Team (`@prajwalsunnagar`, `@ShreyankSridhar`, `@skandaml21`, `@sujalththth-ops`)
-- **Date:** 3 November 2026
+- **Date:** 5 November 2026
 
