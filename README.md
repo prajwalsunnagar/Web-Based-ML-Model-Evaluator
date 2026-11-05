@@ -74,30 +74,48 @@ Web-Based-ML-Model-Evaluator/
 │   └── regression_sample.csv     # Regression test data (10 rows, numeric targets)
 │
 ├── docs/                         # Specifications & deliverables
-│   ├── SRS.docx                  # Software Requirements Specification
-│   ├── Architecture-Design.docx  # Architecture and Design Document
-│   ├── Test-Plan.docx            # Test Plan
-│   ├── SPRINT-PLAN.md            # Agile sprint plan & user stories
-│   ├── PART2_DELIVERABLE_AUDIT.md# Part-2 deliverables audit matrix
+│   ├── SRS-REVISED.docx          # Revised Software Requirements Specification (IEEE 830)
+│   ├── SRS-REVISED.md            # Markdown source for revised SRS
+│   ├── Architecture-Design-REVISED.docx # Revised Architecture & Design Specification (IEEE 1016)
+│   ├── Architecture-Design-REVISED.md   # Markdown source for revised SAD
+│   ├── Test-Plan-REVISED.docx    # Revised Software Test Plan (IEEE 829)
+│   ├── Test-Plan-REVISED.md      # Markdown source for revised STP
+│   ├── TEST-CASE-DOCUMENT.md     # Standalone Test Case Document (TC-01–TC-14, SV-01–SV-09)
+│   ├── UNIT-TEST-REPORT.md       # Comprehensive Unit Test Execution Report
+│   ├── SYSTEM-VALIDATION-REPORT.md # End-to-end System Validation Report (IEEE 1012)
+│   ├── CODE-COVERAGE-REPORT.md   # Line coverage report (76% project / 92% core engine)
+│   ├── BRANCH-COVERAGE-REPORT.md # Branch coverage report (126 branches / 91.1% core engine)
+│   ├── REQUIREMENT-TRACEABILITY-MATRIX.md # Standalone Requirement Traceability Matrix
 │   ├── TEST-EXECUTION-REPORT.md  # Test results & Requirement Traceability Matrix
-│   ├── DEVIATIONS-AND-NOTES.md   # Architectural alignment & design decisions
-│   ├── sprint-1-deviations.md    # Verified document compliance & Sprint 1 deviations
+│   ├── SPRINT-PLAN.md            # Agile sprint plan, user stories & 40 SP backlog
+│   ├── PART2_DELIVERABLE_AUDIT.md# Part-2 deliverables audit matrix
+│   ├── DEVIATIONS-AND-NOTES.md   # 8-point architectural deviations & freeze declaration
+│   ├── FINAL_REPOSITORY_AUDIT.md # Master audit matrix across Parts 1, 2, and 3
+│   ├── FINAL_SUBMISSION_CHECKLIST.md # Academic submission checklist & quality gates
+│   ├── FINAL_REMEDIATION_REPORT.md # Summary report of all remediations performed
 │   ├── DEMO_CHECKLIST.md         # Sprint demo outlines & video release checklists
 │   ├── demo/                     # Sprint demo assets and scripts
-│   │   ├── sprint-1-narration-script.md # 60-second narration script & checklist
-│   │   └── sprint-2-narration-script.md # 120-second narration script & checklist
+│   │   ├── SPRINT-1-RECORDING-GUIDE.md  # 60-second narration script & checklist
+│   │   ├── SPRINT-2-RECORDING-GUIDE.md  # 120-second narration script & checklist
+│   │   ├── sprint-1-narration-script.md # Baseline Sprint 1 script
+│   │   └── sprint-2-narration-script.md # Baseline Sprint 2 script
 │   └── demo_videos/              # Sprint video demo target directory
+│       └── README.md             # Video recording instructions (pending manual recording)
+│
+├── htmlcov/                      # HTML Code Coverage reports (generated via pytest-cov)
+│   └── index.html                # Interactive browser coverage viewer
 │
 ├── tests/                        # Automated unit and integration test suites
 │   ├── conftest.py               # Shared pytest fixtures
-│   ├── test_validation.py        # File and column validation tests
-│   ├── test_classification.py    # Classification metric tests
-│   ├── test_regression.py        # Regression metric tests
-│   ├── test_error_handling.py    # Error path and edge case tests
-│   ├── test_evaluator_modules.py # Evaluator service & end-to-end sample tests
-│   └── test_app_integration.py   # Streamlit UI integration tests (AppTest)
+│   ├── test_validation.py        # File and column validation tests (16 tests)
+│   ├── test_classification.py    # Classification metric tests (17 tests)
+│   ├── test_regression.py        # Regression metric tests (19 tests)
+│   ├── test_error_handling.py    # Error path and edge case tests (22 tests)
+│   ├── test_evaluator_modules.py # Evaluator service & end-to-end sample tests (46 tests)
+│   └── test_app_integration.py   # Streamlit UI integration tests (AppTest) (4 tests)
 │
 ├── scripts/                      # Automation & sync scripts
+│   ├── md_to_docx.py             # Markdown to DOCX document compiler
 │   └── update_github_backlog.py  # GitHub issues updater script
 │
 └── .github/
@@ -123,12 +141,20 @@ The Architecture and Design document details the 3-tier modular reactive archite
 - [View Revised SAD (DOCX)](docs/Architecture-Design-REVISED.docx) | [View Revised SAD (Markdown)](docs/Architecture-Design-REVISED.md)
 - [Original Baseline SAD (DOCX)](docs/Architecture-Design.docx)
 
-### Software Test Plan (STP) & Requirement Traceability Matrix (RTM)
+### Software Test Plan (STP), Test Cases & RTM
 The Test Plan defines the test scope, strategy, test levels, 14 formal test cases (TC-01 through TC-14), 9 security validations (SV-01 through SV-09), and verified execution evidence adhering to IEEE Std 829-2008.
 - [View Revised Test Plan (DOCX)](docs/Test-Plan-REVISED.docx) | [View Revised Test Plan (Markdown)](docs/Test-Plan-REVISED.md)
+- [View Formal Test Case Document](docs/TEST-CASE-DOCUMENT.md) — Comprehensive positive, negative, boundary & security test specifications.
 - [View Requirement Traceability Matrix (RTM)](docs/REQUIREMENT-TRACEABILITY-MATRIX.md)
 - [View Test Execution Report](docs/TEST-EXECUTION-REPORT.md)
 - [Original Baseline Test Plan (DOCX)](docs/Test-Plan.docx)
+
+### Part 3 Testing & Quality Verification Reports
+- [View Unit Test Report](docs/UNIT-TEST-REPORT.md) — Detailed unit test execution logs, module breakdowns, pass counts, and defect resolutions.
+- [View System Validation Report](docs/SYSTEM-VALIDATION-REPORT.md) — End-to-end functional (FR-01–14), non-functional (NFR-01–12), and security (SEC-01–08) validation matrix.
+- [View Code Coverage Report](docs/CODE-COVERAGE-REPORT.md) — Real statement coverage via pytest-cov: 76% project line coverage, 92% core evaluator package coverage, and 76% vs 87% discrepancy resolution.
+- [View Branch Coverage Report](docs/BRANCH-COVERAGE-REPORT.md) — Conditional decision coverage via pytest-cov `--cov-branch`: 126 branches, 91.1% core engine branch coverage, and uncovered path analysis.
+- [View Interactive HTML Coverage](htmlcov/index.html) — Local interactive browser coverage viewer.
 
 ### Agile Sprint Plan & Backlog
 The Sprint Plan defines the delivery milestones, Fibonacci story point scale (40 SP total across Sprint 1 & 2), Definition of Done, user stories for Issues #1 to #10, and GitHub Project Board setup instructions.
@@ -229,9 +255,9 @@ flake8 app.py evaluator/ tests/ --max-line-length=120 --exclude=.venv
 python3 -m py_compile app.py evaluator/*.py tests/*.py
 ```
 
-### Run the Automated Test Suite with Coverage
+### Run the Automated Test Suite with Line & Branch Coverage
 ```bash
-pytest tests/ -v --tb=short --cov=evaluator --cov=app --cov-report=term-missing
+pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --cov-report=term-missing --cov-report=html
 ```
 
 ### Test Suite Breakdown (124 Tests, 100% Pass Rate):
@@ -248,12 +274,15 @@ pytest tests/ -v --tb=short --cov=evaluator --cov=app --cov-report=term-missing
 
 - **Automated Tests:** 124 automated tests passing with 100% pass rate.
 - **Execution Time:** ~1.5 seconds locally and in CI (< 2.0s requirement).
-- **Evaluator Line Coverage:** >90% line coverage on core business logic (`evaluator/`).
+- **Core Evaluator Line Coverage:** **92%** line coverage (91.75%) on core business logic (`evaluator/`).
+- **Core Evaluator Branch Coverage:** **91.1%** branch coverage (77/86 branches) on core engine.
+- **Overall Project Coverage:** **76%** line & branch coverage (encompassing interactive `app.py` UI presentation).
 - **GitHub Actions Pipeline:** Configured in `.github/workflows/ci.yml` across Python 3.10, 3.11, and 3.12 with concurrency controls. Each workflow run executes:
   1. Dependency installation (`requirements.txt` + `requirements-dev.txt`)
   2. Flake8 PEP 8 linting
   3. Python module compilation check
-  4. Pytest test suite with line-by-line coverage reporting
+  4. Pytest test suite with line and branch coverage reporting
+  5. HTML coverage artifact upload (`actions/upload-artifact@v4`)
 
 ---
 

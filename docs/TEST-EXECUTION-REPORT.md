@@ -17,7 +17,8 @@
 | **Failed Tests** | 0 | **0 tests** | **PASSED** |
 | **Skipped / Blocked** | 0 | **0 tests** | **PASSED** |
 | **Total Execution Time** | < 2.00s (DoD / NFR-01) | **1.48 seconds** | **PASSED** |
-| **Core Evaluator Line Coverage** | > 85% | **92% line coverage** | **PASSED** |
+| **Core Evaluator Line Coverage** | > 85% | **92% line coverage (91.75%)** | **PASSED** |
+| **Overall Project Coverage (Line & Branch)** | Baseline | **76% coverage** (230/302 stmts, 116/126 branches) | **PASSED** |
 | **Linting & Code Quality (Flake8)** | 0 PEP 8 violations | **0 errors / warnings** | **PASSED** |
 | **Module Compilation (`py_compile`)** | Clean bytecode compile | **All modules compiled cleanly** | **PASSED** |
 
