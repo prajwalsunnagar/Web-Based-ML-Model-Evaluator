@@ -19,7 +19,7 @@ from evaluator.validators import parse_uploaded_csv
 
 
 # --------------------------------------------------
-# PAGE CONFIGURATION
+# PAGE CONFIGURATION AND CUSTOM STYLING
 # --------------------------------------------------
 
 st.set_page_config(
@@ -28,28 +28,13 @@ st.set_page_config(
     layout="wide",
 )
 
+css_path = Path(__file__).parent / "styles" / "style.css"
 
-# --------------------------------------------------
-# LOAD CUSTOM CSS
-# --------------------------------------------------
-
-def load_css():
-    css_path = Path(__file__).parent / "styles" / "style.css"
-
-    with open(css_path, encoding="utf-8") as css_file:
-        st.markdown(
-            f"<style>{css_file.read()}</style>",
-            unsafe_allow_html=True,
-        )
-
-
-load_css()
-
-
-# --------------------------------------------------
-# HERO SECTION
-# --------------------------------------------------
-
+if css_path.exists():
+    st.markdown(
+        f"<style>{css_path.read_text(encoding='utf-8')}</style>",
+        unsafe_allow_html=True,
+    )
 
 
 # --------------------------------------------------
@@ -69,7 +54,6 @@ st.markdown(
         Evaluate, analyze and understand your machine learning
         models with comprehensive performance metrics.
     </p>
-
     <div class="hero-badges">
         <span>📊 Classification</span>
         <span>📈 Regression</span>
@@ -78,7 +62,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
 
 
 # --------------------------------------------------
@@ -94,9 +77,7 @@ if "run_history" not in st.session_state:
 # --------------------------------------------------
 
 with st.sidebar:
-    st.markdown("## Session run history")
-
-    st.caption("Your recent evaluation activity.")
+    st.header("✦ Session Run History")
 
     if st.session_state.run_history:
         for saved_run in st.session_state.run_history:
@@ -109,41 +90,20 @@ with st.sidebar:
         if st.button("Clear run history", type="secondary"):
             st.session_state.run_history = []
             st.rerun()
-
     else:
-        st.caption(
-            "Completed and failed evaluations will appear here."
-        )
+        st.caption("Completed and failed evaluations will appear here.")
 
 
 # --------------------------------------------------
-# CSV UPLOAD
+# DATASET UPLOAD
 # --------------------------------------------------
 
-st.markdown(
-    """
-    <div class="section-heading">
-        <span class="section-icon">⇧</span>
-        <span>Upload Dataset</span>
-    </div>
-
-    <p class="section-description">
-        Upload a CSV file containing actual and predicted values
-        to begin your model evaluation.
-    </p>
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown('<div class="section-heading">📂 Dataset Upload</div>', unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader(
     "Upload evaluation CSV",
     type=["csv"],
 )
-
-
-# --------------------------------------------------
-# DATASET VALIDATION AND OVERVIEW
-# --------------------------------------------------
 
 if uploaded_file is not None:
 
@@ -159,56 +119,34 @@ if uploaded_file is not None:
 
     st.success("CSV uploaded and validated.")
 
-    st.markdown(
-        """
-        <div class="section-heading">
-            <span class="section-icon">▦</span>
-            <span>Dataset Overview</span>
-        </div>
+    # --------------------------------------------------
+    # DATASET PREVIEW
+    # --------------------------------------------------
 
-        <p class="section-description">
-            Explore your uploaded data before evaluating
-            model performance.
-        </p>
-        """,
+    st.markdown(
+        '<div class="section-heading">📋 Dataset Preview</div>',
         unsafe_allow_html=True,
     )
-
-    # Dataset statistics
-    c1, c2, c3, c4 = st.columns(4)
-
-    c1.metric("Total Rows", len(df))
-    c2.metric("Total Columns", len(df.columns))
-    c3.metric("Missing Values", int(df.isnull().sum().sum()))
-    c4.metric("Complete Rows", int(df.dropna().shape[0]))
-
-    # Dataset preview
-    st.markdown("#### Dataset Preview")
 
     st.dataframe(
         df.head(10),
         use_container_width=True,
     )
 
+    # Dataset statistics
+    c1, c2, c3, c4 = st.columns(4)
+
+    c1.metric("Rows", len(df))
+    c2.metric("Columns", len(df.columns))
+    c3.metric("Missing values", int(df.isnull().sum().sum()))
+    c4.metric("Complete rows", int(df.dropna().shape[0]))
 
     # --------------------------------------------------
     # EVALUATION CONFIGURATION
     # --------------------------------------------------
 
-    st.markdown("---")
-
     st.markdown(
-        """
-        <div class="section-heading">
-            <span class="section-icon">⚙</span>
-            <span>Evaluation Configuration</span>
-        </div>
-
-        <p class="section-description">
-            Configure your evaluation task and select
-            the metrics you want to calculate.
-        </p>
-        """,
+        '<div class="section-heading">⚙️ Evaluation Configuration</div>',
         unsafe_allow_html=True,
     )
 
@@ -232,7 +170,7 @@ if uploaded_file is not None:
     )
 
     selected_metrics = st.multiselect(
-        "Select evaluation metrics",
+        "Select metrics",
         SUPPORTED_METRICS[task_type],
         default=[SUPPORTED_METRICS[task_type][0]],
     )
@@ -243,13 +181,10 @@ if uploaded_file is not None:
     # Classification-specific configuration
     if task_type == "Classification":
 
-        classes = list(
-            pd.unique(df[actual_column].dropna())
-        )
-
+        classes = list(pd.unique(df[actual_column].dropna()))
         average_options = list(CLASSIFICATION_AVERAGES)
 
-        if len(classes) != 2:
+        if len(classes) != 2 and "binary" in average_options:
             average_options.remove("binary")
 
         average = st.selectbox(
@@ -258,8 +193,9 @@ if uploaded_file is not None:
             index=0,
             help=(
                 "Weighted accounts for class frequency; "
-                "macro treats classes equally; micro aggregates "
-                "decisions; binary scores one selected positive class."
+                "macro treats classes equally; "
+                "micro aggregates decisions; "
+                "binary scores one selected positive class."
             ),
         )
 
@@ -269,28 +205,19 @@ if uploaded_file is not None:
                 classes,
             )
 
-
     # --------------------------------------------------
     # EVALUATION EXECUTION
     # --------------------------------------------------
 
     if actual_column == predicted_column:
 
-        st.error(
-            "Actual and predicted columns must be different."
-        )
+        st.error("Actual and predicted columns must be different.")
 
     elif not selected_metrics:
 
-        st.warning(
-            "Select at least one evaluation metric."
-        )
+        st.warning("Select at least one metric.")
 
-    elif st.button(
-        "Calculate Evaluation Metrics",
-        type="primary",
-        use_container_width=True,
-    ):
+    elif st.button("Calculate Evaluation Metrics", type="primary"):
 
         run = EvaluationRun(
             source_file=uploaded_file.name,
@@ -308,20 +235,15 @@ if uploaded_file is not None:
         )
 
         run_data = run.to_dict()
+        st.session_state.run_history.insert(0, run_data)
 
-        st.session_state.run_history.insert(
-            0,
-            run_data,
-        )
-
-        # Evaluation result
-        st.markdown("---")
+        # --------------------------------------------------
+        # EVALUATION RESULTS
+        # --------------------------------------------------
 
         if run.status == "failed":
 
-            st.error(
-                run.error_message or "Evaluation failed."
-            )
+            st.error(run.error_message or "Evaluation failed.")
 
         else:
 
@@ -330,29 +252,16 @@ if uploaded_file is not None:
             )
 
             st.markdown(
-                """
-                <div class="section-heading">
-                    <span class="section-icon">✦</span>
-                    <span>Evaluation Results</span>
-                </div>
-
-                <p class="section-description">
-                    Performance metrics calculated for your model.
-                </p>
-                """,
+                '<div class="section-heading">📊 Evaluation Results</div>',
                 unsafe_allow_html=True,
             )
 
-            # Metric cards
-            metric_cols = st.columns(
-                max(1, len(run.results))
-            )
+            metric_cols = st.columns(max(1, len(run.results)))
 
             for col, (name, value) in zip(
                 metric_cols,
                 run.results.items(),
             ):
-
                 col.metric(
                     name,
                     "N/A" if value is None else f"{value:.4f}",
@@ -362,7 +271,6 @@ if uploaded_file is not None:
                 f"Evaluated {run.sample_count} valid row(s)."
             )
 
-            # Metrics table
             result_table = run.to_metrics_dataframe()
 
             st.dataframe(
@@ -371,13 +279,19 @@ if uploaded_file is not None:
                 use_container_width=True,
             )
 
-            # Classification confusion matrix
+            # --------------------------------------------------
+            # CONFUSION MATRIX
+            # --------------------------------------------------
+
             if (
                 task_type == "Classification"
                 and run.confusion_matrix is not None
             ):
 
-                st.markdown("#### Confusion Matrix")
+                st.markdown(
+                    '<div class="section-heading">🎯 Confusion Matrix</div>',
+                    unsafe_allow_html=True,
+                )
 
                 matrix = pd.DataFrame(
                     run.confusion_matrix,
@@ -396,11 +310,15 @@ if uploaded_file is not None:
                     use_container_width=True,
                 )
 
-            # Regression residual summary
+            # --------------------------------------------------
+            # REGRESSION RESIDUAL SUMMARY
+            # --------------------------------------------------
+
             elif task_type == "Regression":
 
                 st.markdown(
-                    "#### Regression Residual Summary"
+                    '<div class="section-heading">📈 Regression Residual Summary</div>',
+                    unsafe_allow_html=True,
                 )
 
                 residual_summary = pd.DataFrame(
@@ -425,20 +343,10 @@ if uploaded_file is not None:
 
 if st.session_state.run_history:
 
-    st.markdown("---")
+    st.divider()
 
     st.markdown(
-        """
-        <div class="section-heading">
-            <span class="section-icon">◷</span>
-            <span>Evaluation Run History</span>
-        </div>
-
-        <p class="section-description">
-            Review your previous evaluation results and
-            download reports.
-        </p>
-        """,
+        '<div class="section-heading">🕘 Evaluation Run History</div>',
         unsafe_allow_html=True,
     )
 
@@ -458,7 +366,7 @@ if st.session_state.run_history:
             "Averaging": item["average"],
         }
 
-        row.update(item["results"])
+        row.update(item.get("results", {}))
 
         if item.get("error_message"):
             row["Error"] = item["error_message"]
@@ -471,10 +379,11 @@ if st.session_state.run_history:
         use_container_width=True,
     )
 
-    # Download section
-    latest = st.session_state.run_history[0]
+    # --------------------------------------------------
+    # DOWNLOAD OPTIONS
+    # --------------------------------------------------
 
-    st.markdown("#### Download Reports")
+    latest = st.session_state.run_history[0]
 
     dl_col1, dl_col2, dl_col3 = st.columns(3)
 
@@ -488,37 +397,28 @@ if st.session_state.run_history:
         ),
         file_name=f"evaluation-{latest['run_id']}.json",
         mime="application/json",
-        use_container_width=True,
     )
 
     if latest.get("results"):
 
         summary_rows = [
             {
-                "Metric": k,
-                "Value": "N/A" if v is None else f"{v:.4f}",
+                "Metric": key,
+                "Value": "N/A" if value is None else f"{value:.4f}",
             }
-            for k, v in latest["results"].items()
+            for key, value in latest["results"].items()
         ]
 
         dl_col2.download_button(
             "Download Metrics Summary (CSV)",
-            data=pd.DataFrame(
-                summary_rows
-            ).to_csv(index=False),
-            file_name=(
-                f"metrics_summary_{latest['run_id'][:8]}.csv"
-            ),
+            data=pd.DataFrame(summary_rows).to_csv(index=False),
+            file_name=f"metrics_summary_{latest['run_id'][:8]}.csv",
             mime="text/csv",
-            use_container_width=True,
         )
 
     dl_col3.download_button(
         "Download Run History (CSV)",
-        data=pd.DataFrame(
-            history_rows
-        ).to_csv(index=False),
+        data=pd.DataFrame(history_rows).to_csv(index=False),
         file_name="evaluation-history.csv",
         mime="text/csv",
-        use_container_width=True,
     )
