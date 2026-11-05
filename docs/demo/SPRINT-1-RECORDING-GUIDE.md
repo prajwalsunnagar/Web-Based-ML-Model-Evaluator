@@ -43,3 +43,4 @@ After recording the screen capture, compress the video using ffmpeg:
 ```bash
 ffmpeg -i raw_sprint1_recording.mov -vcodec libx264 -crf 28 -pix_fmt yuv420p docs/demo_videos/sprint1_demo.mp4
 ```
+

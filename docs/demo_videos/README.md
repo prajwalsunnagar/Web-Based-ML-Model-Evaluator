@@ -17,3 +17,4 @@ This directory is designated for the official MP4 screencast video demonstration
 - **Frame Rate:** 30 fps
 - **Format:** MP4 (H.264 / AAC)
 - **File Size:** $< 15\text{ MB}$ for Sprint 1; $< 25\text{ MB}$ for Sprint 2
+
