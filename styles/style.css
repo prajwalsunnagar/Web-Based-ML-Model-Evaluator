@@ -1,0 +1,298 @@
+
+/* ==================================================
+   WEB-BASED ML MODEL EVALUATOR
+   DARK PURPLE + GALAXY THEME
+================================================== */
+
+
+/* GLOBAL BACKGROUND */
+
+.stApp {
+    background: linear-gradient(
+        135deg,
+        #0b1020 0%,
+        #11152b 55%,
+        #17132f 100%
+    );
+
+    color: #f1f3ff;
+}
+
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    max-width: 1250px;
+}
+
+
+/* HEADINGS */
+
+h1 {
+    color: #ffffff !important;
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+}
+
+h2, h3 {
+    color: #d9d5ff !important;
+    font-weight: 700 !important;
+}
+
+
+/* SIDEBAR */
+
+section[data-testid="stSidebar"] {
+    background: #10152b;
+    border-right: 1px solid #29264d;
+}
+
+section[data-testid="stSidebar"] h2 {
+    color: #d9d5ff !important;
+}
+
+
+/* HERO SECTION */
+
+.hero-section {
+    padding: 25px 0 35px 0;
+}
+
+.hero-tag {
+    color: #a78bfa;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+}
+
+/* STREAMLIT HERO TITLE */
+
+div[data-testid="stTitle"] h1 {
+    font-size: 48px !important;
+    font-weight: 850 !important;
+    color: #9875ff !important;
+    margin-bottom: 8px !important;
+}
+
+.hero-description {
+    color: #aaaecb;
+    font-size: 16px;
+    margin-bottom: 22px;
+}
+
+.hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.hero-badges span {
+    background: #211d42;
+    border: 1px solid #484078;
+    color: #d7ceff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+
+/* SECTION HEADINGS */
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #f0edff;
+    font-size: 22px;
+    font-weight: 750;
+    margin-top: 28px;
+    margin-bottom: 5px;
+}
+
+.section-icon {
+    color: #a78bfa;
+    font-size: 25px;
+}
+
+.section-description {
+    color: #999dbd;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+
+/* UPLOAD AREA */
+
+div[data-testid="stFileUploader"] {
+    background: linear-gradient(
+        145deg,
+        #191d39,
+        #211b40
+    );
+
+    border: 1px dashed #8066df;
+    border-radius: 16px;
+    padding: 18px;
+    transition: 0.3s ease;
+}
+
+div[data-testid="stFileUploader"]:hover {
+    border-color: #b49aff;
+
+    background: linear-gradient(
+        145deg,
+        #202449,
+        #29204e
+    );
+}
+
+div[data-testid="stFileUploaderDropzone"] {
+    background: transparent;
+    border: none;
+}
+
+div[data-testid="stFileUploaderDropzone"] button {
+    background: linear-gradient(
+        90deg,
+        #7255e8,
+        #4d7df2
+    );
+
+    color: white;
+    border: none;
+    border-radius: 9px;
+}
+
+div[data-testid="stFileUploaderDropzone"] button:hover {
+    color: white;
+    border: 1px solid #b49aff;
+}
+
+div[data-testid="stFileUploaderDropzone"] small {
+    color: #aaaecb;
+}
+
+
+/* METRIC CARDS */
+
+div[data-testid="stMetric"] {
+    background: linear-gradient(
+        145deg,
+        #1c2040,
+        #28204d
+    );
+
+    border: 1px solid #484078;
+    border-radius: 15px;
+    padding: 22px 18px;
+    min-height: 115px;
+
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease;
+}
+
+div[data-testid="stMetric"]:hover {
+    transform: translateY(-3px);
+    border-color: #9275f5;
+}
+
+div[data-testid="stMetricLabel"] {
+    color: #b7b2d9 !important;
+    font-size: 13px !important;
+}
+
+div[data-testid="stMetricValue"] {
+    color: #ffffff !important;
+    font-size: 27px !important;
+    font-weight: 750 !important;
+}
+
+
+/* BUTTONS */
+
+.stButton > button,
+.stDownloadButton > button {
+    background: linear-gradient(
+        90deg,
+        #7255e8,
+        #4d7df2
+    );
+
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.stButton > button:hover,
+.stDownloadButton > button:hover {
+    border: 1px solid #a99aff;
+    color: white;
+    transform: translateY(-2px);
+}
+
+
+/* DATA TABLES */
+
+div[data-testid="stDataFrame"] {
+    border: 1px solid #34345b;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+
+/* INPUTS AND SELECT BOXES */
+
+div[data-baseweb="select"] > div {
+    border-radius: 10px;
+}
+
+.stTextInput input {
+    border-radius: 10px;
+}
+
+
+/* SUCCESS, WARNING AND ERROR MESSAGES */
+
+div[data-testid="stAlert"] {
+    border-radius: 12px;
+}
+
+
+/* DIVIDERS */
+
+hr {
+    border-color: #34345b;
+}
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 768px) {
+
+    div[data-testid="stTitle"] h1 {
+        font-size: 34px !important;
+    }
+    .hero-description {
+        font-size: 14px;
+    }
+
+    .section-heading {
+        font-size: 19px;
+    }
+
+    .hero-badges {
+        gap: 8px;
+    }
+
+    .hero-badges span {
+        font-size: 11px;
+    }
+
+}
