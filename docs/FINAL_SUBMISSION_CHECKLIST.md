@@ -80,3 +80,4 @@ No further functional alterations or feature additions will be introduced to `ma
 | **Documentation & UI Lead** | Shreyank S | `@ShreyankSridhar` | **SIGNED & FROZEN** |
 | **Backend Architecture & QA Lead** | Skanda | `@skandaml21` | **SIGNED & FROZEN** |
 | **Full-Stack Integration Lead** | Sujal | `@sujalththth-ops` | **SIGNED & FROZEN** |
+

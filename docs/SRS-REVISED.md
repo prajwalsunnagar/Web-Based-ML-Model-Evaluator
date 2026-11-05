@@ -343,3 +343,4 @@ flowchart TD
   - **4a. Non-numeric data in regression:** System records error "Regression requires numeric values. Column contains non-numeric data.", transitions run status to `failed`, adds failed run to session history, and renders a danger alert banner.
   - **4b. Single-class target in classification:** System records error "Classification requires at least 2 distinct classes in ground truth.", transitions run status to `failed`, and displays user-friendly warning banner.
   - **4c. Zero valid rows after null drop:** System records error "No valid paired rows remaining after filtering missing values.", transitions run status to `failed`, and halts computation safely.
+

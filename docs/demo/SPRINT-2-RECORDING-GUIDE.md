@@ -108,3 +108,4 @@
 ```bash
 ffmpeg -i raw_sprint2_recording.mov -vcodec libx264 -crf 28 -pix_fmt yuv420p docs/demo_videos/sprint2_demo.mp4
 ```
+

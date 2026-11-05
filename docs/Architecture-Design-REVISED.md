@@ -380,3 +380,4 @@ sequenceDiagram
 | **Report Exporter** | `evaluator/engine.py` | `FR-13`, `FR-14` |
 | **Automated Test Harness** | `tests/` (124 tests) | `NFR-01`, `NFR-02`, `NFR-03`, `SEC-01`–`SEC-07` |
 | **CI Automation** | `.github/workflows/ci.yml` | `NFR-09`, `NFR-10` |
+
