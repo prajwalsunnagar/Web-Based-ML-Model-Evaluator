@@ -61,7 +61,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("Model Evaluator.")
+st.title("Web-Based ML Model Evaluator")
 
 st.markdown(
     """
