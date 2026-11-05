@@ -64,11 +64,11 @@ Every Functional Requirement (`FR-01` to `FR-14`) and Non-Functional Requirement
 | `NFR-12` | Accessibility (accessible forms & contrast) | **Issue #6** | Sprint 1 | `@ShreyankSridhar` | 3 | **Verified** (High-contrast styling and explicit form labels) |
 
 **Workload Distribution:**
-- `@prajwalsunnagar`: 13 Story Points
-- `@ShreyankSridhar`: 9 Story Points
-- `@skandaml21`: 11 Story Points
-- `@sujalththth-ops`: 10 Story Points
-- **Total Backlog:** 43 Story Points across Sprint 1 (22 SP) and Sprint 2 (21 SP).
+- `@prajwalsunnagar`: 13 Story Points (Issues #1, #5, #9)
+- `@ShreyankSridhar`: 9 Story Points (Issues #2, #6, #10)
+- `@skandaml21`: 8 Story Points (Issues #3, #7)
+- `@sujalththth-ops`: 10 Story Points (Issues #4, #8)
+- **Total Backlog:** **40 Story Points** across Sprint 1 (22 SP) and Sprint 2 (18 SP).
 
 ---
 

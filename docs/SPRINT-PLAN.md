@@ -206,3 +206,35 @@ A backlog item or task is officially declared **Done** only when:
 | **Issue #10: Complete project documentation and deployment instructions** | `NFR-04`, `NFR-06`, `NFR-07`, `NFR-08`, `NFR-10` | `@ShreyankSridhar` | 3 SP | **Completed** | Comprehensive documentation updated across `README.md`, `SPRINT-PLAN.md`, `TEST-EXECUTION-REPORT.md`, `PART2_DELIVERABLE_AUDIT.md`, `DEVIATIONS-AND-NOTES.md`, `DEMO_CHECKLIST.md`, and `docs/demo/sprint-2-narration-script.md`. Development freeze declared. |
 
 **Total Sprint 2 Points Delivered:** **18 Story Points** (Cumulative Project Velocity: **40 Story Points** across Sprint 1 and Sprint 2).
+
+---
+
+## 7. GitHub Projects v2 Board Setup & Issue Mapping
+
+GitHub Projects v2 operates at the user/organization level. Follow these instructions to set up and link the board:
+
+1. **Navigate to GitHub Projects:**
+   - Log into GitHub as `@prajwalsunnagar` (or repository administrator).
+   - Go to: `https://github.com/prajwalsunnagar?tab=projects`.
+2. **Create New Project:**
+   - Click **New project** -> Select **Board** template.
+   - Title: `Web-Based ML Model Evaluator Board`.
+3. **Link Repository:**
+   - In Settings -> Linked repositories, add `prajwalsunnagar/Web-Based-ML-Model-Evaluator`.
+4. **Configure Custom Fields:**
+   - **Sprint** (Iteration): `Sprint 1` (19 Oct – 23 Oct 2026), `Sprint 2` (26 Oct – 30 Oct 2026).
+   - **Story Points** (Number): `1, 2, 3, 5, 8`.
+   - **Status** (Single select): `Todo`, `In Progress`, `Done`.
+5. **Populate the 10 Backlog Issues:**
+   - Add Issues #1 to #10 with their corresponding assignees and story points:
+     - Issue #1: 3 SP, Sprint 1, `@prajwalsunnagar`, Status: Done
+     - Issue #2: 3 SP, Sprint 1, `@ShreyankSridhar`, Status: Done
+     - Issue #3: 3 SP, Sprint 1, `@skandaml21`, Status: Done
+     - Issue #4: 5 SP, Sprint 1, `@sujalththth-ops`, Status: Done
+     - Issue #5: 5 SP, Sprint 1, `@prajwalsunnagar`, Status: Done
+     - Issue #6: 3 SP, Sprint 1, `@ShreyankSridhar`, Status: Done
+     - Issue #7: 5 SP, Sprint 2, `@skandaml21`, Status: Done
+     - Issue #8: 5 SP, Sprint 2, `@sujalththth-ops`, Status: Done
+     - Issue #9: 5 SP, Sprint 2, `@prajwalsunnagar`, Status: Done
+     - Issue #10: 3 SP, Sprint 2, `@ShreyankSridhar`, Status: Done
+

@@ -2,7 +2,7 @@
 
 **Project:** Web-Based ML Model Evaluator  
 **Document Reference:** Deliverable Part-2 (Software Test Plan & Final Submission Verification)  
-**Execution Date:** 30 October 2026  
+**Execution Date:** 3 November 2026 (Sprint 2 Completion & Development Freeze Audit)  
 **Execution Environment:** macOS 15, Python 3.9.6 / 3.10 / 3.11 / 3.12, pytest 8.4.2, pandas 2.3.3, scikit-learn 1.6.1, streamlit 1.35.0  
 **Lead QA / Reviewers:** Skanda (`@skandaml21`), Prajwal Sunnagar (`@prajwalsunnagar`), Shreyank S (`@ShreyankSridhar`)
 
