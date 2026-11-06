@@ -13,6 +13,7 @@ from evaluator.validators import (
     validate_metric_compatibility,
 )
 
+
 def test_upload_validation_rejects_type_and_size_before_parsing():
     _, type_error = parse_uploaded_csv("rows.xlsx", b"not a csv")
     _, size_error = parse_uploaded_csv("rows.csv", b"x" * (MAX_FILE_SIZE + 1))
@@ -399,6 +400,8 @@ def test_performance_10k_rows():
     duration = time.perf_counter() - start
     assert duration < 1.0
     assert count == 10000
+
+
 # Metric compatibility validation tests
 
 @pytest.mark.parametrize(
