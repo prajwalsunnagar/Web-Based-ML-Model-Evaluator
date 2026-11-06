@@ -1,3 +1,4 @@
+
 """Evaluation run lifecycle and safe result serialization."""
 from __future__ import annotations
 
@@ -9,6 +10,7 @@ from uuid import uuid4
 import pandas as pd
 
 from evaluator.metrics import calculate_metrics
+from evaluator.validators import validate_metric_compatibility
 
 
 @dataclass
@@ -36,7 +38,16 @@ class EvaluationRun:
         self.confusion_matrix = None
         self.confusion_labels = None
         self.sample_count = 0
+
         try:
+            compatibility_error = validate_metric_compatibility(
+                self.task_type,
+                self.selected_metrics,
+            )
+
+            if compatibility_error:
+                raise ValueError(compatibility_error)
+
             self.results, matrix, self.sample_count = calculate_metrics(
                 self.task_type,
                 actual,
@@ -45,12 +56,16 @@ class EvaluationRun:
                 average=self.average,
                 positive_label=self.positive_label,
             )
+
             if matrix is not None:
                 self.confusion_labels = [str(value) for value in matrix.index]
                 self.confusion_matrix = matrix.values.tolist()
+
             self.status = "completed"
+
         except (ValueError, TypeError) as exc:
             msg = str(exc)
+
             if "/" in msg or "\\" in msg or "Traceback" in msg:
                 self.error_message = (
                     "Evaluation failed due to invalid data format. "
@@ -58,9 +73,13 @@ class EvaluationRun:
                 )
             else:
                 self.error_message = msg
+
             self.status = "failed"
+
         except Exception:
-            self.error_message = "Evaluation failed. Check the selected columns and input values."
+            self.error_message = (
+                "Evaluation failed. Check the selected columns and input values."
+            )
             self.status = "failed"
 
     def to_metrics_dataframe(self) -> pd.DataFrame:
@@ -70,14 +89,19 @@ class EvaluationRun:
 
     def to_dict(self) -> dict:
         result = asdict(self)
+
         if self.positive_label is not None:
             result["positive_label"] = str(self.positive_label)
+
         if "results" in result and isinstance(result["results"], dict):
             clean_results = {}
+
             for k, v in result["results"].items():
                 if isinstance(v, float) and (math.isnan(v) or math.isinf(v)):
                     clean_results[k] = None
                 else:
                     clean_results[k] = v
+
             result["results"] = clean_results
+
         return result

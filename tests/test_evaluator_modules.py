@@ -6,7 +6,12 @@ import pytest
 
 from evaluator.engine import EvaluationRun
 from evaluator.metrics import calculate_metrics, regression_residual_summary
-from evaluator.validators import MAX_FILE_SIZE, parse_uploaded_csv, validate_dataframe
+from evaluator.validators import (
+    MAX_FILE_SIZE,
+    parse_uploaded_csv,
+    validate_dataframe,
+    validate_metric_compatibility,
+)
 
 
 def test_upload_validation_rejects_type_and_size_before_parsing():
@@ -395,3 +400,45 @@ def test_performance_10k_rows():
     duration = time.perf_counter() - start
     assert duration < 1.0
     assert count == 10000
+
+
+# Metric compatibility validation tests
+
+@pytest.mark.parametrize(
+    "task_type, selected_metrics",
+    [
+        ("Classification", ["Accuracy", "Precision", "Recall", "F1-score"]),
+        ("Regression", ["MAE", "MSE", "RMSE", "R²"]),
+    ],
+)
+def test_valid_metric_combinations_are_accepted(task_type, selected_metrics):
+    assert validate_metric_compatibility(task_type, selected_metrics) is None
+
+
+@pytest.mark.parametrize(
+    "task_type, selected_metrics",
+    [
+        ("Classification", ["MAE"]),
+        ("Classification", ["MSE", "RMSE"]),
+        ("Regression", ["Accuracy"]),
+        ("Regression", ["Precision", "Recall"]),
+    ],
+)
+def test_incompatible_metric_combinations_are_rejected(
+    task_type, selected_metrics
+):
+    error = validate_metric_compatibility(task_type, selected_metrics)
+
+    assert error == "Selected metrics do not match the evaluation task."
+
+
+def test_unsupported_task_type_is_rejected():
+    error = validate_metric_compatibility("Clustering", ["Accuracy"])
+
+    assert error == "Unsupported evaluation task."
+
+
+def test_empty_metric_selection_is_rejected():
+    error = validate_metric_compatibility("Classification", [])
+
+    assert error == "Select at least one metric."
