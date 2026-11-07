@@ -202,7 +202,7 @@ Provides 60-second (Sprint 1) and 120-second (Sprint 2) timestamped narration sc
 
 | Layer | Technology |
 |---|---|
-| Language | Python 3.10+ (tested on 3.10, 3.11, 3.12) |
+| Language | Python 3.10+ (CI-tested on 3.10, 3.11, 3.12; locally tested on 3.13.7) |
 | Web Framework | Streamlit >= 1.35.0 |
 | Data Processing | pandas >= 2.2.0, numpy >= 1.26.0 |
 | ML Metrics | scikit-learn >= 1.4.0 |
