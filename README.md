@@ -71,6 +71,8 @@ Web-Based-ML-Model-Evaluator/
 │   └── engine.py                 # Run IDs, status lifecycle, metadata, safe errors
 ├── requirements.txt              # Core runtime dependencies
 ├── requirements-dev.txt          # Testing, coverage, and linting tools
+├── .streamlit/
+│   └── config.toml               # Streamlit application configuration
 ├── README.md                     # Project documentation & execution guide
 │
 ├── sample_data/                  # Verification datasets
