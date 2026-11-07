@@ -4,7 +4,11 @@
 
 The **Web-Based ML Model Evaluator** is a web-based system designed to provide a structured platform for evaluating Machine Learning models.
 
-The project evaluates predictions supplied in a CSV; it does not load or run trained model files. Users upload actual and predicted values, select classification or regression metrics, and view results. The application maintains session-scoped run history, assigns each run a unique UUID and UTC timestamp, and provides multi-format export downloads (JSON evaluation report, CSV metrics summary, and CSV run history).
+The project evaluates predictions supplied in a CSV; it does not load or run trained model files. Users upload actual and predicted values, select classification or regression metrics, and view evaluation results.
+
+The application includes CSV upload validation, file-size and format checks, duplicate and invalid header detection, dataset structure validation, and validation of selected actual and predicted columns. It also checks that both selected columns contain at least one overlapping non-empty row before evaluation.
+
+The application maintains session-scoped run history, assigns each run a unique UUID and UTC timestamp, and provides multi-format export downloads (JSON evaluation report, CSV metrics summary, and CSV run history).
 
 The project follows a structured software engineering approach covering requirements analysis, system architecture, implementation, automated testing, and continuous integration.
 
@@ -50,7 +54,7 @@ The major project deliverables are:
 2. Architecture and Design Document (SAD)
 3. Test Plan & Execution Report
 4. Web-Based ML Model Evaluator application
-5. Automated unit & integration test suite (124 tests, 100% pass rate)
+5. Automated unit & integration test suite (132 tests, 100% pass rate)
 6. Supporting agile project documentation & sprint demo narration scripts
 
 ---
@@ -260,23 +264,23 @@ python3 -m py_compile app.py evaluator/*.py tests/*.py
 pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --cov-report=term-missing --cov-report=html
 ```
 
-### Test Suite Breakdown (124 Tests, 100% Pass Rate):
+### Test Suite Breakdown (132 Tests, 100% Pass Rate):
 - **File & Upload Validation (`test_validation.py` - 16 tests):** File format (.csv), MIME types (`text/csv`, `application/x-csv`, etc.), 10 MB ceiling, 0-byte/empty bytes rejection, duplicate column detection, and dataframe validation.
 - **Classification Engine (`test_classification.py` - 17 tests):** Binary and multiclass accuracy, precision, recall, F1-score with weighted/macro/micro averaging, binary positive class selection, and NaN handling.
-- **Regression Engine (`test_regression.py` - 19 tests):** MAE, MSE, RMSE, R² calculation, signed residual summaries, $N < 2$ single-row edge cases, and NaN dropping.
-- **Robustness & Error Handling (`test_error_handling.py` - 22 tests):** Same column guard, non-numeric regression inputs, infinite values, single-class detection, column count guards, empty upload bytes, and residual summary error handling.
-- **Evaluator Modules & Lifecycle (`test_evaluator_modules.py` - 46 tests):** Upload validation, header whitespace stripping, natural confusion matrix sorting, run lifecycle states (`pending`, `running`, `completed`, `failed`), error state reset on re-execution, safe error responses without traceback leakage, JSON export NaN/Inf sanitization, end-to-end evaluation on committed sample datasets, repeatability within `1e-6`, and performance benchmarks (< 1.0s for 1,000 and 10,000 rows).
+- **Regression Engine (`test_regression.py` - 20 tests):** MAE, MSE, RMSE, R² calculation, signed residual summaries, $N < 2$ single-row edge cases, and NaN dropping.
+- **Robustness & Error Handling (`test_error_handling.py` - 24 tests):** Same column guard, non-numeric regression inputs, infinite values, single-class detection, column count guards, empty upload bytes, and residual summary error handling.
+- **Evaluator Modules & Lifecycle (`test_evaluator_modules.py` - 51 tests):** Upload validation, header whitespace stripping, natural confusion matrix sorting, run lifecycle states (`pending`, `running`, `completed`, `failed`), error state reset on re-execution, safe error responses without traceback leakage, JSON export NaN/Inf sanitization, end-to-end evaluation on committed sample datasets, repeatability within `1e-6`, and performance benchmarks (< 1.0s for 1,000 and 10,000 rows).
 - **Streamlit UI Integration (`test_app_integration.py` - 4 tests):** Application launch and landing page rendering, session run history rendering for completed and failed runs, and clear history action.
 
 ---
 
 ## 11. CI/CD & Testing Status
 
-- **Automated Tests:** 124 automated tests passing with 100% pass rate.
-- **Execution Time:** ~1.5 seconds locally and in CI (< 2.0s requirement).
-- **Core Evaluator Line Coverage:** **92%** line coverage (91.75%) on core business logic (`evaluator/`).
-- **Core Evaluator Branch Coverage:** **91.1%** branch coverage (77/86 branches) on core engine.
-- **Overall Project Coverage:** **76%** line & branch coverage (encompassing interactive `app.py` UI presentation).
+- **Automated Tests:** 132 automated tests passing with 100% pass rate.
+- **Execution Time:** ~8.16 seconds locally (132 tests).
+- **Application Coverage:** 45% (`app.py`).
+- **Evaluator Module Coverage:** Engine 87%, metrics 90%, validators 74%.
+- **Overall Project Coverage:** 72% line coverage in the latest local test run.
 - **GitHub Actions Pipeline:** Configured in `.github/workflows/ci.yml` across Python 3.10, 3.11, and 3.12 with concurrency controls. Each workflow run executes:
   1. Dependency installation (`requirements.txt` + `requirements-dev.txt`)
   2. Flake8 PEP 8 linting
