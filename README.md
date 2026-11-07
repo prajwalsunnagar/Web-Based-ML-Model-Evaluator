@@ -165,7 +165,7 @@ The Test Plan defines the test scope, strategy, test levels, 14 formal test case
 - [View System Validation Report](docs/SYSTEM-VALIDATION-REPORT.md) — End-to-end functional (FR-01–14), non-functional (NFR-01–12), and security (SEC-01–08) validation matrix.
 - [View Code Coverage Report](docs/CODE-COVERAGE-REPORT.md) — Latest local pytest-cov results: 72% overall project line coverage, with module-level coverage figures documented in Section 11.
 - [View Branch Coverage Report](docs/BRANCH-COVERAGE-REPORT.md) — Conditional decision coverage via pytest-cov `--cov-branch`, including branch counts and uncovered path analysis.
-- [View Interactive HTML Coverage](htmlcov/index.html) — Local interactive browser coverage viewer.
+
 
 ### Agile Sprint Plan & Backlog
 The Sprint Plan defines the delivery milestones, Fibonacci story point scale (40 SP total across Sprint 1 & 2), Definition of Done, user stories for Issues #1 to #10, and GitHub Project Board setup instructions.
