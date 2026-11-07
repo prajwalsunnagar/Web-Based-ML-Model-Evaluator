@@ -96,6 +96,7 @@ Web-Based-ML-Model-Evaluator/
 │   ├── REQUIREMENT-TRACEABILITY-MATRIX.md # Standalone Requirement Traceability Matrix
 │   ├── TEST-EXECUTION-REPORT.md  # Test results & Requirement Traceability Matrix
 │   ├── SPRINT-PLAN.md            # Agile sprint plan, user stories & 40 SP backlog
+│   ├── sprint-1-backlog-audit.md # Sprint 1 backlog audit and issue traceability
 │   ├── PART2_DELIVERABLE_AUDIT.md# Part-2 deliverables audit matrix
 │   ├── DEVIATIONS-AND-NOTES.md   # 8-point architectural deviations & freeze declaration
 │   ├── FINAL_REPOSITORY_AUDIT.md # Master audit matrix across Parts 1, 2, and 3
