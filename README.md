@@ -77,6 +77,7 @@ Web-Based-ML-Model-Evaluator/
 │   └── style.css                 # Custom application styling
 ├── README.md                     # Project documentation & execution guide
 ├── .gitignore                    # Git ignore rules for generated and local files
+├── .mailmap                      # Canonical contributor identity mappings for Git history
 │
 ├── sample_data/                  # Verification datasets
 │   ├── classification_sample.csv # Classification test data (15 rows, 4 classes)
