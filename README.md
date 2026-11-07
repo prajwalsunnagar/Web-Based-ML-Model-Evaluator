@@ -87,7 +87,7 @@ Web-Based-ML-Model-Evaluator/
 │   ├── TEST-CASE-DOCUMENT.md     # Standalone Test Case Document (TC-01–TC-14, SV-01–SV-09)
 │   ├── UNIT-TEST-REPORT.md       # Comprehensive Unit Test Execution Report
 │   ├── SYSTEM-VALIDATION-REPORT.md # End-to-end System Validation Report (IEEE 1012)
-│   ├── CODE-COVERAGE-REPORT.md   # Line coverage report (76% project / 92% core engine)
+│   ├── CODE-COVERAGE-REPORT.md   # Line coverage report (72% project / updated module coverage)
 │   ├── BRANCH-COVERAGE-REPORT.md # Branch coverage report (126 branches / 91.1% core engine)
 │   ├── REQUIREMENT-TRACEABILITY-MATRIX.md # Standalone Requirement Traceability Matrix
 │   ├── TEST-EXECUTION-REPORT.md  # Test results & Requirement Traceability Matrix
