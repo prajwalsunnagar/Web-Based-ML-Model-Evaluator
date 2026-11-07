@@ -15,7 +15,10 @@ from evaluator.metrics import (
     SUPPORTED_METRICS,
     regression_residual_summary,
 )
-from evaluator.validators import parse_uploaded_csv
+from evaluator.validators import (
+    parse_uploaded_csv,
+    validate_evaluation_columns,
+)
 
 
 # --------------------------------------------------
@@ -98,7 +101,11 @@ with st.sidebar:
 # DATASET UPLOAD
 # --------------------------------------------------
 
-st.markdown('<div class="section-heading">📂 Dataset Upload</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="section-heading">'
+    '📂 Dataset Upload</div>',
+    unsafe_allow_html=True,
+)
 
 uploaded_file = st.file_uploader(
     "Upload evaluation CSV",
@@ -209,9 +216,15 @@ if uploaded_file is not None:
     # EVALUATION EXECUTION
     # --------------------------------------------------
 
-    if actual_column == predicted_column:
+    column_error = validate_evaluation_columns(
+        df,
+        actual_column,
+        predicted_column,
+    )
 
-        st.error("Actual and predicted columns must be different.")
+    if column_error:
+
+        st.error(column_error)
 
     elif not selected_metrics:
 
@@ -317,7 +330,8 @@ if uploaded_file is not None:
             elif task_type == "Regression":
 
                 st.markdown(
-                    '<div class="section-heading">📈 Regression Residual Summary</div>',
+                    '<div class="section-heading">'
+                    '📈 Regression Residual Summary</div>',
                     unsafe_allow_html=True,
                 )
 
