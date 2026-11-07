@@ -277,7 +277,7 @@ pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --cov-report=
 ## 11. CI/CD & Testing Status
 
 - **Automated Tests:** 132 automated tests passing with 100% pass rate.
-- **Execution Time:** ~1.5 seconds locally and in CI (< 2.0s requirement).
+- **Execution Time:** ~8.16 seconds locally (132 tests).
 - **Core Evaluator Line Coverage:** **92%** line coverage (91.75%) on core business logic (`evaluator/`).
 - **Core Evaluator Branch Coverage:** **91.1%** branch coverage (77/86 branches) on core engine.
 - **Overall Project Coverage:** **76%** line & branch coverage (encompassing interactive `app.py` UI presentation).
