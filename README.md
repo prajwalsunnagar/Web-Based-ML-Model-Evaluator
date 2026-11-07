@@ -166,7 +166,6 @@ The Test Plan defines the test scope, strategy, test levels, 14 formal test case
 - [View Code Coverage Report](docs/CODE-COVERAGE-REPORT.md) — Latest local pytest-cov results: 72% overall project line coverage, with module-level coverage figures documented in Section 11.
 - [View Branch Coverage Report](docs/BRANCH-COVERAGE-REPORT.md) — Conditional decision coverage via pytest-cov `--cov-branch`, including branch counts and uncovered path analysis.
 
-
 ### Agile Sprint Plan & Backlog
 The Sprint Plan defines the delivery milestones, Fibonacci story point scale (40 SP total across Sprint 1 & 2), Definition of Done, user stories for Issues #1 to #10, and GitHub Project Board setup instructions.
 - [View Sprint Plan](docs/SPRINT-PLAN.md)
@@ -220,6 +219,13 @@ Provides 60-second (Sprint 1) and 120-second (Sprint 2) timestamped narration sc
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
+
+**Windows PowerShell:**
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
 ```
 
 ### 2. Install dependencies
