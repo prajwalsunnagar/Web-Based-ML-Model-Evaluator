@@ -115,8 +115,6 @@ Web-Based-ML-Model-Evaluator/
 │   └── demo_videos/              # Sprint video demo target directory
 │       └── README.md             # Video recording instructions (pending manual recording)
 │
-├── htmlcov/                      # HTML Code Coverage reports (generated via pytest-cov)
-│   └── index.html                # Interactive browser coverage viewer
 │
 ├── tests/                        # Automated unit and integration test suites
 │   ├── conftest.py               # Shared pytest fixtures
