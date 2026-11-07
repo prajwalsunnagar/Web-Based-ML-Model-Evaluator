@@ -4,7 +4,11 @@
 
 The **Web-Based ML Model Evaluator** is a web-based system designed to provide a structured platform for evaluating Machine Learning models.
 
-The project evaluates predictions supplied in a CSV; it does not load or run trained model files. Users upload actual and predicted values, select classification or regression metrics, and view results. The application maintains session-scoped run history, assigns each run a unique UUID and UTC timestamp, and provides multi-format export downloads (JSON evaluation report, CSV metrics summary, and CSV run history).
+The project evaluates predictions supplied in a CSV; it does not load or run trained model files. Users upload actual and predicted values, select classification or regression metrics, and view evaluation results.
+
+The application includes CSV upload validation, file-size and format checks, duplicate and invalid header detection, dataset structure validation, and validation of selected actual and predicted columns. It also checks that both selected columns contain at least one overlapping non-empty row before evaluation.
+
+The application maintains session-scoped run history, assigns each run a unique UUID and UTC timestamp, and provides multi-format export downloads (JSON evaluation report, CSV metrics summary, and CSV run history).
 
 The project follows a structured software engineering approach covering requirements analysis, system architecture, implementation, automated testing, and continuous integration.
 
