@@ -308,10 +308,10 @@ python -m pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --c
 ## 11. CI/CD & Testing Status
 
 - **Automated Tests:** 132 automated tests passing with 100% pass rate.
-- **Execution Time:** ~8.16 seconds locally (132 tests).
-- **Application Coverage:** 45% (`app.py`).
-- **Evaluator Module Coverage:** Engine 87%, metrics 90%, validators 74%.
-- **Overall Project Coverage:** 72% line coverage in the latest local test run.
+- **Execution Time:** ~7.07 seconds locally (132 tests, Python 3.13.7).
+- **Application Coverage:** 46% (`app.py`).
+- **Evaluator Module Coverage:** Engine 91%, metrics 90%, validators 76%.
+- **Overall Project Coverage:** 73% line coverage in the latest local test run.
 - **GitHub Actions Pipeline:** Configured in `.github/workflows/ci.yml` across Python 3.10, 3.11, and 3.12 with concurrency controls. Each workflow run executes:
   1. Dependency installation (`requirements.txt` + `requirements-dev.txt`)
   2. Flake8 PEP 8 linting
