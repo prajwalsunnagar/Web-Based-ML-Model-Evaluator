@@ -20,7 +20,7 @@ The main objectives of the project are:
 
 - Provide a web-based platform for Machine Learning model evaluation.
 - Provide a user-friendly interface for interacting with the system.
-- Support evaluation of Machine Learning models using appropriate evaluation metrics.
+- Support evaluation of Machine Learning model predictions using appropriate evaluation metrics.
 - Present evaluation results in a clear and understandable manner.
 - Define a structured software architecture for the system.
 - Document functional and non-functional requirements.
@@ -37,7 +37,7 @@ The project documentation covers:
 
 - System requirements
 - User interaction and system workflow
-- Dataset and model evaluation
+- Evaluation of actual and predicted values from CSV datasets
 - Performance evaluation metrics
 - System architecture
 - Functional and non-functional requirements
@@ -71,7 +71,13 @@ Web-Based-ML-Model-Evaluator/
 │   └── engine.py                 # Run IDs, status lifecycle, metadata, safe errors
 ├── requirements.txt              # Core runtime dependencies
 ├── requirements-dev.txt          # Testing, coverage, and linting tools
+├── .streamlit/
+│   └── config.toml               # Streamlit application configuration
+├── styles/
+│   └── style.css                 # Custom application styling
 ├── README.md                     # Project documentation & execution guide
+├── .gitignore                    # Git ignore rules for generated and local files
+├── .mailmap                      # Canonical contributor identity mappings for Git history
 │
 ├── sample_data/                  # Verification datasets
 │   ├── classification_sample.csv # Classification test data (15 rows, 4 classes)
@@ -87,14 +93,17 @@ Web-Based-ML-Model-Evaluator/
 │   ├── TEST-CASE-DOCUMENT.md     # Standalone Test Case Document (TC-01–TC-14, SV-01–SV-09)
 │   ├── UNIT-TEST-REPORT.md       # Comprehensive Unit Test Execution Report
 │   ├── SYSTEM-VALIDATION-REPORT.md # End-to-end System Validation Report (IEEE 1012)
-│   ├── CODE-COVERAGE-REPORT.md   # Line coverage report (76% project / 92% core engine)
-│   ├── BRANCH-COVERAGE-REPORT.md # Branch coverage report (126 branches / 91.1% core engine)
+│   ├── CODE-COVERAGE-REPORT.md   # Line coverage report (72% project / updated module coverage)
+│   ├── BRANCH-COVERAGE-REPORT.md # Branch coverage report (latest branch coverage results)
 │   ├── REQUIREMENT-TRACEABILITY-MATRIX.md # Standalone Requirement Traceability Matrix
 │   ├── TEST-EXECUTION-REPORT.md  # Test results & Requirement Traceability Matrix
 │   ├── SPRINT-PLAN.md            # Agile sprint plan, user stories & 40 SP backlog
+│   ├── sprint-1-backlog-audit.md # Sprint 1 backlog audit and issue traceability
 │   ├── PART2_DELIVERABLE_AUDIT.md# Part-2 deliverables audit matrix
 │   ├── DEVIATIONS-AND-NOTES.md   # 8-point architectural deviations & freeze declaration
+│   ├── sprint-1-deviations.md    # Sprint 1 implementation deviations and notes
 │   ├── FINAL_REPOSITORY_AUDIT.md # Master audit matrix across Parts 1, 2, and 3
+│   ├── GIT-AUTHOR-AUDIT.md       # Git commit author and contribution audit
 │   ├── FINAL_SUBMISSION_CHECKLIST.md # Academic submission checklist & quality gates
 │   ├── FINAL_REMEDIATION_REPORT.md # Summary report of all remediations performed
 │   ├── DEMO_CHECKLIST.md         # Sprint demo outlines & video release checklists
@@ -106,16 +115,14 @@ Web-Based-ML-Model-Evaluator/
 │   └── demo_videos/              # Sprint video demo target directory
 │       └── README.md             # Video recording instructions (pending manual recording)
 │
-├── htmlcov/                      # HTML Code Coverage reports (generated via pytest-cov)
-│   └── index.html                # Interactive browser coverage viewer
 │
 ├── tests/                        # Automated unit and integration test suites
 │   ├── conftest.py               # Shared pytest fixtures
 │   ├── test_validation.py        # File and column validation tests (16 tests)
 │   ├── test_classification.py    # Classification metric tests (17 tests)
-│   ├── test_regression.py        # Regression metric tests (19 tests)
-│   ├── test_error_handling.py    # Error path and edge case tests (22 tests)
-│   ├── test_evaluator_modules.py # Evaluator service & end-to-end sample tests (46 tests)
+│   ├── test_regression.py        # Regression metric tests (20 tests)
+│   ├── test_error_handling.py    # Error path and edge case tests (24 tests)
+│   ├── test_evaluator_modules.py # Evaluator service & end-to-end sample tests (51 tests)
 │   └── test_app_integration.py   # Streamlit UI integration tests (AppTest) (4 tests)
 │
 ├── scripts/                      # Automation & sync scripts
@@ -156,9 +163,8 @@ The Test Plan defines the test scope, strategy, test levels, 14 formal test case
 ### Part 3 Testing & Quality Verification Reports
 - [View Unit Test Report](docs/UNIT-TEST-REPORT.md) — Detailed unit test execution logs, module breakdowns, pass counts, and defect resolutions.
 - [View System Validation Report](docs/SYSTEM-VALIDATION-REPORT.md) — End-to-end functional (FR-01–14), non-functional (NFR-01–12), and security (SEC-01–08) validation matrix.
-- [View Code Coverage Report](docs/CODE-COVERAGE-REPORT.md) — Real statement coverage via pytest-cov: 76% project line coverage, 92% core evaluator package coverage, and 76% vs 87% discrepancy resolution.
-- [View Branch Coverage Report](docs/BRANCH-COVERAGE-REPORT.md) — Conditional decision coverage via pytest-cov `--cov-branch`: 126 branches, 91.1% core engine branch coverage, and uncovered path analysis.
-- [View Interactive HTML Coverage](htmlcov/index.html) — Local interactive browser coverage viewer.
+- [View Code Coverage Report](docs/CODE-COVERAGE-REPORT.md) — Latest local pytest-cov results: 72% overall project line coverage, with module-level coverage figures documented in Section 11.
+- [View Branch Coverage Report](docs/BRANCH-COVERAGE-REPORT.md) — Conditional decision coverage via pytest-cov `--cov-branch`, including branch counts and uncovered path analysis.
 
 ### Agile Sprint Plan & Backlog
 The Sprint Plan defines the delivery milestones, Fibonacci story point scale (40 SP total across Sprint 1 & 2), Definition of Done, user stories for Issues #1 to #10, and GitHub Project Board setup instructions.
@@ -196,7 +202,7 @@ Provides 60-second (Sprint 1) and 120-second (Sprint 2) timestamped narration sc
 
 | Layer | Technology |
 |---|---|
-| Language | Python 3.10+ (tested on 3.10, 3.11, 3.12) |
+| Language | Python 3.10+ (CI-tested on 3.10, 3.11, 3.12; locally tested on 3.13.7) |
 | Web Framework | Streamlit >= 1.35.0 |
 | Data Processing | pandas >= 2.2.0, numpy >= 1.26.0 |
 | ML Metrics | scikit-learn >= 1.4.0 |
@@ -213,6 +219,13 @@ Provides 60-second (Sprint 1) and 120-second (Sprint 2) timestamped narration sc
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
+
+**Windows PowerShell:**
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
 ```
 
 ### 2. Install dependencies
@@ -254,9 +267,21 @@ The application will launch and open in your browser at `http://localhost:8501`.
 flake8 app.py evaluator/ tests/ --max-line-length=120 --exclude=.venv
 ```
 
+**Windows PowerShell:**
+
+```powershell
+python -m flake8 app.py evaluator/ tests/ --max-line-length=120 --exclude=.venv
+```
+
 ### Run Build & Compilation Checks
 ```bash
 python3 -m py_compile app.py evaluator/*.py tests/*.py
+```
+
+**Windows PowerShell:**
+
+```powershell
+python -m py_compile app.py evaluator/*.py tests/*.py
 ```
 
 ### Run the Automated Test Suite with Line & Branch Coverage
@@ -264,12 +289,18 @@ python3 -m py_compile app.py evaluator/*.py tests/*.py
 pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --cov-report=term-missing --cov-report=html
 ```
 
+**Windows PowerShell:**
+
+```powershell
+python -m pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --cov-report=term-missing --cov-report=html
+```
+
 ### Test Suite Breakdown (132 Tests, 100% Pass Rate):
 - **File & Upload Validation (`test_validation.py` - 16 tests):** File format (.csv), MIME types (`text/csv`, `application/x-csv`, etc.), 10 MB ceiling, 0-byte/empty bytes rejection, duplicate column detection, and dataframe validation.
 - **Classification Engine (`test_classification.py` - 17 tests):** Binary and multiclass accuracy, precision, recall, F1-score with weighted/macro/micro averaging, binary positive class selection, and NaN handling.
 - **Regression Engine (`test_regression.py` - 20 tests):** MAE, MSE, RMSE, R² calculation, signed residual summaries, $N < 2$ single-row edge cases, and NaN dropping.
 - **Robustness & Error Handling (`test_error_handling.py` - 24 tests):** Same column guard, non-numeric regression inputs, infinite values, single-class detection, column count guards, empty upload bytes, and residual summary error handling.
-- **Evaluator Modules & Lifecycle (`test_evaluator_modules.py` - 51 tests):** Upload validation, header whitespace stripping, natural confusion matrix sorting, run lifecycle states (`pending`, `running`, `completed`, `failed`), error state reset on re-execution, safe error responses without traceback leakage, JSON export NaN/Inf sanitization, end-to-end evaluation on committed sample datasets, repeatability within `1e-6`, and performance benchmarks (< 1.0s for 1,000 and 10,000 rows).
+- **Evaluator Modules & Lifecycle (`test_evaluator_modules.py` - 51 tests):** Upload validation, header whitespace stripping, natural confusion matrix sorting, run lifecycle states (`pending`, `running`, `completed`, `failed`), error state reset on re-execution, safe error responses without traceback leakage, JSON export NaN/Inf sanitization, end-to-end evaluation on committed sample datasets, repeatability within `1e-6`, and metric calculation performance benchmarks (< 1.0s for 1,000 and 10,000 rows; excludes the full application workflow).
 - **Streamlit UI Integration (`test_app_integration.py` - 4 tests):** Application launch and landing page rendering, session run history rendering for completed and failed runs, and clear history action.
 
 ---
@@ -277,10 +308,9 @@ pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --cov-report=
 ## 11. CI/CD & Testing Status
 
 - **Automated Tests:** 132 automated tests passing with 100% pass rate.
-- **Execution Time:** ~8.16 seconds locally (132 tests).
-- **Application Coverage:** 45% (`app.py`).
-- **Evaluator Module Coverage:** Engine 87%, metrics 90%, validators 74%.
-- **Overall Project Coverage:** 72% line coverage in the latest local test run.
+- **Application Coverage:** 46% (`app.py`).
+- **Evaluator Module Coverage:** Engine 91%, metrics 90%, validators 76%.
+- **Overall Project Coverage:** 73% line coverage in the latest local test run.
 - **GitHub Actions Pipeline:** Configured in `.github/workflows/ci.yml` across Python 3.10, 3.11, and 3.12 with concurrency controls. Each workflow run executes:
   1. Dependency installation (`requirements.txt` + `requirements-dev.txt`)
   2. Flake8 PEP 8 linting
