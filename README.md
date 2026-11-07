@@ -267,6 +267,12 @@ The application will launch and open in your browser at `http://localhost:8501`.
 flake8 app.py evaluator/ tests/ --max-line-length=120 --exclude=.venv
 ```
 
+**Windows PowerShell:**
+
+```powershell
+python -m flake8 app.py evaluator/ tests/ --max-line-length=120 --exclude=.venv
+```
+
 ### Run Build & Compilation Checks
 ```bash
 python3 -m py_compile app.py evaluator/*.py tests/*.py
