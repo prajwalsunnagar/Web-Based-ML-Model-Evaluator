@@ -88,7 +88,7 @@ Web-Based-ML-Model-Evaluator/
 │   ├── UNIT-TEST-REPORT.md       # Comprehensive Unit Test Execution Report
 │   ├── SYSTEM-VALIDATION-REPORT.md # End-to-end System Validation Report (IEEE 1012)
 │   ├── CODE-COVERAGE-REPORT.md   # Line coverage report (72% project / updated module coverage)
-│   ├── BRANCH-COVERAGE-REPORT.md # Branch coverage report (126 branches / 91.1% core engine)
+│   ├── BRANCH-COVERAGE-REPORT.md # Branch coverage report (latest branch coverage results)
 │   ├── REQUIREMENT-TRACEABILITY-MATRIX.md # Standalone Requirement Traceability Matrix
 │   ├── TEST-EXECUTION-REPORT.md  # Test results & Requirement Traceability Matrix
 │   ├── SPRINT-PLAN.md            # Agile sprint plan, user stories & 40 SP backlog
