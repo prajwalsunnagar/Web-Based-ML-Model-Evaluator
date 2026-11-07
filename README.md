@@ -20,7 +20,7 @@ The main objectives of the project are:
 
 - Provide a web-based platform for Machine Learning model evaluation.
 - Provide a user-friendly interface for interacting with the system.
-- Support evaluation of Machine Learning models using appropriate evaluation metrics.
+- Support evaluation of Machine Learning model predictions using appropriate evaluation metrics.
 - Present evaluation results in a clear and understandable manner.
 - Define a structured software architecture for the system.
 - Document functional and non-functional requirements.
