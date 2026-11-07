@@ -279,7 +279,7 @@ pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --cov-report=
 - **Automated Tests:** 132 automated tests passing with 100% pass rate.
 - **Execution Time:** ~8.16 seconds locally (132 tests).
 - **Application Coverage:** 45% (`app.py`).
-- **Core Evaluator Branch Coverage:** **91.1%** branch coverage (77/86 branches) on core engine.
+- **Evaluator Module Coverage:** Engine 87%, metrics 90%, validators 74%.
 - **Overall Project Coverage:** **76%** line & branch coverage (encompassing interactive `app.py` UI presentation).
 - **GitHub Actions Pipeline:** Configured in `.github/workflows/ci.yml` across Python 3.10, 3.11, and 3.12 with concurrency controls. Each workflow run executes:
   1. Dependency installation (`requirements.txt` + `requirements-dev.txt`)
