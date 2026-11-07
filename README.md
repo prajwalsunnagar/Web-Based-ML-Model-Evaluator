@@ -264,7 +264,7 @@ python3 -m py_compile app.py evaluator/*.py tests/*.py
 pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --cov-report=term-missing --cov-report=html
 ```
 
-### Test Suite Breakdown (124 Tests, 100% Pass Rate):
+### Test Suite Breakdown (132 Tests, 100% Pass Rate):
 - **File & Upload Validation (`test_validation.py` - 16 tests):** File format (.csv), MIME types (`text/csv`, `application/x-csv`, etc.), 10 MB ceiling, 0-byte/empty bytes rejection, duplicate column detection, and dataframe validation.
 - **Classification Engine (`test_classification.py` - 17 tests):** Binary and multiclass accuracy, precision, recall, F1-score with weighted/macro/micro averaging, binary positive class selection, and NaN handling.
 - **Regression Engine (`test_regression.py` - 19 tests):** MAE, MSE, RMSE, R² calculation, signed residual summaries, $N < 2$ single-row edge cases, and NaN dropping.
