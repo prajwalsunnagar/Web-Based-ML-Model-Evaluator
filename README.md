@@ -99,6 +99,7 @@ Web-Based-ML-Model-Evaluator/
 │   ├── sprint-1-backlog-audit.md # Sprint 1 backlog audit and issue traceability
 │   ├── PART2_DELIVERABLE_AUDIT.md# Part-2 deliverables audit matrix
 │   ├── DEVIATIONS-AND-NOTES.md   # 8-point architectural deviations & freeze declaration
+│   ├── sprint-1-deviations.md    # Sprint 1 implementation deviations and notes
 │   ├── FINAL_REPOSITORY_AUDIT.md # Master audit matrix across Parts 1, 2, and 3
 │   ├── GIT-AUTHOR-AUDIT.md       # Git commit author and contribution audit
 │   ├── FINAL_SUBMISSION_CHECKLIST.md # Academic submission checklist & quality gates
