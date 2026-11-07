@@ -54,7 +54,7 @@ The major project deliverables are:
 2. Architecture and Design Document (SAD)
 3. Test Plan & Execution Report
 4. Web-Based ML Model Evaluator application
-5. Automated unit & integration test suite (124 tests, 100% pass rate)
+5. Automated unit & integration test suite (132 tests, 100% pass rate)
 6. Supporting agile project documentation & sprint demo narration scripts
 
 ---
