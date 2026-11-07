@@ -272,6 +272,12 @@ flake8 app.py evaluator/ tests/ --max-line-length=120 --exclude=.venv
 python3 -m py_compile app.py evaluator/*.py tests/*.py
 ```
 
+**Windows PowerShell:**
+
+```powershell
+python -m py_compile app.py evaluator/*.py tests/*.py
+```
+
 ### Run the Automated Test Suite with Line & Branch Coverage
 ```bash
 pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --cov-report=term-missing --cov-report=html
