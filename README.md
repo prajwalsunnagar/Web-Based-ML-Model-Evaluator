@@ -280,7 +280,7 @@ pytest tests/ -v --tb=short --cov=app --cov=evaluator --cov-branch --cov-report=
 - **Execution Time:** ~8.16 seconds locally (132 tests).
 - **Application Coverage:** 45% (`app.py`).
 - **Evaluator Module Coverage:** Engine 87%, metrics 90%, validators 74%.
-- **Overall Project Coverage:** **76%** line & branch coverage (encompassing interactive `app.py` UI presentation).
+- **Overall Project Coverage:** 72% line coverage in the latest local test run.
 - **GitHub Actions Pipeline:** Configured in `.github/workflows/ci.yml` across Python 3.10, 3.11, and 3.12 with concurrency controls. Each workflow run executes:
   1. Dependency installation (`requirements.txt` + `requirements-dev.txt`)
   2. Flake8 PEP 8 linting
