@@ -99,6 +99,7 @@ Web-Based-ML-Model-Evaluator/
 │   ├── PART2_DELIVERABLE_AUDIT.md# Part-2 deliverables audit matrix
 │   ├── DEVIATIONS-AND-NOTES.md   # 8-point architectural deviations & freeze declaration
 │   ├── FINAL_REPOSITORY_AUDIT.md # Master audit matrix across Parts 1, 2, and 3
+│   ├── GIT-AUTHOR-AUDIT.md       # Git commit author and contribution audit
 │   ├── FINAL_SUBMISSION_CHECKLIST.md # Academic submission checklist & quality gates
 │   ├── FINAL_REMEDIATION_REPORT.md # Summary report of all remediations performed
 │   ├── DEMO_CHECKLIST.md         # Sprint demo outlines & video release checklists
