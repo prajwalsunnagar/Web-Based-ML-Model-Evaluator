@@ -37,7 +37,7 @@ The project documentation covers:
 
 - System requirements
 - User interaction and system workflow
-- Dataset and model evaluation
+- Evaluation of actual and predicted values from CSV datasets
 - Performance evaluation metrics
 - System architecture
 - Functional and non-functional requirements
