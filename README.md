@@ -114,7 +114,7 @@ Web-Based-ML-Model-Evaluator/
 │   ├── test_validation.py        # File and column validation tests (16 tests)
 │   ├── test_classification.py    # Classification metric tests (17 tests)
 │   ├── test_regression.py        # Regression metric tests (20 tests)
-│   ├── test_error_handling.py    # Error path and edge case tests (22 tests)
+│   ├── test_error_handling.py    # Error path and edge case tests (24 tests)
 │   ├── test_evaluator_modules.py # Evaluator service & end-to-end sample tests (46 tests)
 │   └── test_app_integration.py   # Streamlit UI integration tests (AppTest) (4 tests)
 │
